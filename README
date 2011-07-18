@@ -1,0 +1,14 @@
+Description:
+ VIM configuration pack for libmeegotouch and qt4 development.
+
+Collector/author:
+ David Kedves <kedazo@gmail.com or dkedves@blumsoft.eu>
+
+License:
+ See these pages or the plugins code for the plugins license
+ + http://vim-taglist.sourceforge.net/
+ + http://www.vim.org/scripts/script.php?script_id=1520
+
+ The other parts (tags and syntax files) which are made by me
+ can be redistributed under GPL 3.0 license.
+
