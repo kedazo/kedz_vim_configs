@@ -1,5 +1,5 @@
 Description:
- VIM configuration pack for libmeegotouch and qt4 development.
+ VIM configuration pack for libmeegotouch and qt4 based development.
 
 Collector/author:
  David Kedves <kedazo@gmail.com or dkedves@blumsoft.eu>
@@ -8,7 +8,32 @@ License:
  See these pages or the plugins code for the plugins license
  + http://vim-taglist.sourceforge.net/
  + http://www.vim.org/scripts/script.php?script_id=1520
+ TODO: fix/check this out...
 
  The other parts (tags and syntax files) which are made by me
  can be redistributed under GPL 3.0 license.
+ * tags/*.tags
+ * after/syntax/cpp/*.vim
+
+ No garranty, warranty... etc. the usual stuff.
+ ( http://www.gnu.org/licenses/gpl-3.0.txt )
+
+Dependencies:
+ * Some latest VIM version
+ * ctags
+
+Info:
+ This repository contains basically my ~/.vim directory, and also
+ my vimrc, if you clone this move this to your home as well and make
+ a symlink like this: ln -s ~/.vim/vimrc ~/.vimrc to turn on the magic.
+ (!!!XXX!!! Please don't forget to make a backup 
+  from your previously used vim configuration first!)
+
+ After you done, go to your project directory, press Ctrl+F12 it will generate
+ tags file for your project, and when you enter '.' or '->' in the code
+ the autocompletion will pop-up, and the Qt4 and LMT based code will be 
+ (hopefully) properly syntax highlighted...
+
+PS:
+ Any ideas, patches...etc are welcome, feel free to send me an e-mail.
 
