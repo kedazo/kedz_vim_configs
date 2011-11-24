@@ -15,7 +15,10 @@ syn keyword qtClass quint8 quint16 quint32 quint64 quintptr qulonglong uchar uin
 "
 " -- Qt defined global functions
 "
-syn keyword qtFunc qAbs qBound qDebug qFatal qFuzzyCompare q_check_ptr qrand qsrand qtTrId qt_set_sequence_auto_mnemonic qt_symbian_exception2Error qt_symbian_exception2LeaveL qt_symbian_throwIfError qBinaryFind qCopy qCopyBackward qCount qDeleteAll qEqual qFill qFind qGreater qLess qLowerBound qSort qStableSort qSwap qUpperBound
+syn keyword qtFunc qAbs qBound qDebug qFatal qFuzzyCompare q_check_ptr qrand qsrand qtTrId
+syn keyword qtFunc qt_set_sequence_auto_mnemonic qt_symbian_exception2Error qt_symbian_exception2LeaveL
+syn keyword qtFunc qt_symbian_throwIfError qBinaryFind qCopy qCopyBackward qCount qDeleteAll qEqual qFill qFind
+syn keyword qtFunc qGreater qLess qLowerBound qSort qStableSort qSwap qUpperBound qRegisterMetaType
 
 "
 " -- QObject functions
