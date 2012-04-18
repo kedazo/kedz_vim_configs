@@ -21,7 +21,6 @@ let g:header_open = "false"
 function! Pipas_Open_Header ()
    if g:header_open != "false"
        :exe "normal \<C-w>\<Up>:q\<CR>\<CR>"
-       echo "normal \<C-w\>\<Up\>:q\<CR\>"
        let g:header_open = "false"
    else
        let curr_file = expand("%")
