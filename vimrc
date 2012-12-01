@@ -35,8 +35,8 @@ map <C-F12> :!ctags -R -I --exclude=*stub* --exclude=*test* --languages=c++ --c+
 map <F12> :TlistToggle<CR>
 map <F4> :call Pipas_Open_Header()<Esc>
 
-set tags+=~/.vim/tags/lmt_0.22.11.tags
-set tags+=~/.vim/tags/qt_4.7.4_git20110517.tags
+set tags+=~/.vim/tags/qt-4.8.1-ubuntu.tags
+set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
 let OmniCpp_GlobalScopeSearch = 1
 let OmniCpp_NamespaceSearch = 1
 set autoindent
