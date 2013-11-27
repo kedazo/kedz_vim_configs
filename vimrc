@@ -30,13 +30,15 @@ function! Pipas_Open_Header ()
    endif
 endfunction
 
-map <C-F12> :!ctags -R -I --exclude=*stub* --exclude=*test* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*test* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 " map <C-F11> :!indent -nbbo -nut -linux -l85 -ci4 -br -brs -brf *.c *.h<CR>
 map <F12> :TlistToggle<CR>
 map <F4> :call Pipas_Open_Header()<Esc>
 
+set tags+=~/.vim/tags/cpp_stl.tags
 set tags+=~/.vim/tags/qt-4.8.1-ubuntu.tags
 set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
+" set tags+=~/.vim/tags/cocos2dx-21rc0.tags
 let OmniCpp_GlobalScopeSearch = 1
 let OmniCpp_NamespaceSearch = 1
 set autoindent
