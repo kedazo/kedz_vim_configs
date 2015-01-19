@@ -30,7 +30,7 @@ function! Pipas_Open_Header ()
    endif
 endfunction
 
-map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*test* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 " map <C-F11> :!indent -nbbo -nut -linux -l85 -ci4 -br -brs -brf *.c *.h<CR>
 map <F12> :TlistToggle<CR>
 map <F4> :call Pipas_Open_Header()<Esc>
@@ -41,7 +41,13 @@ set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
 " set tags+=~/.vim/tags/cocos2dx-21rc0.tags
 let OmniCpp_GlobalScopeSearch = 1
 let OmniCpp_NamespaceSearch = 1
+let OmniCpp_DisplayMode = 1
+let OmniCpp_ShowScopeInAbbr = 1
 set autoindent
+" Mine
 set et sw=4 ts=4 sts=4
 " set et ai sw=4 ts=4 sts=4 tw=80 cino="(0,W2s,i2s,t0,l1,:0"
+
+" two-space indentation
+autocmd BufNewFile,BufRead /home/kedz/Work/v*/* set et sw=2 ts=2 sts=2
 
