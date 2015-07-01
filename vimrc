@@ -31,6 +31,9 @@ function! Pipas_Open_Header ()
    endif
 endfunction
 
+" airline plugin
+set laststatus=2
+
 map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 " map <C-F11> :!indent -nbbo -nut -linux -l85 -ci4 -br -brs -brf *.c *.h<CR>
 map <F12> :TlistToggle<CR>
