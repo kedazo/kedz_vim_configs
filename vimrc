@@ -17,6 +17,7 @@ function! Pipas_Normalscreen ()
 endfunction
 
 let g:header_open = "false"
+let g:load_doxygen_syntax = 1
 
 function! Pipas_Open_Header ()
    if g:header_open != "false"
