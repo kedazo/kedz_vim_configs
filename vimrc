@@ -31,15 +31,17 @@ function! Pipas_Open_Header ()
    endif
 endfunction
 
-" enable 256 term colors
-set t_Co=256
+" to forcibly enable 256 term colors
+" set t_Co=256
 
 " airline plugin
 set laststatus=2
 
 set ttimeoutlen=50
-let g:airline_theme = 'powerlineish'
-" let g:airline_theme = 'kalisi'
+" this looks cool for 256 colors:
+" let g:airline_theme = 'powerlineish'
+" but this one ok for 8 colors:
+let g:airline_theme = 'tomorrow'
 let g:airline#extensions#hunks#enabled=0
 let g:airline#extensions#branch#enabled=1
 
@@ -57,10 +59,11 @@ map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --
 " map <C-F11> :!indent -nbbo -nut -linux -l85 -ci4 -br -brs -brf *.c *.h<CR>
 map <F12> :TlistToggle<CR>
 map <F4> :call Pipas_Open_Header()<Esc>
+map <F5> dwj
 
 set tags+=~/.vim/tags/cpp_stl.tags
-set tags+=~/.vim/tags/qt-4.8.1-ubuntu.tags
-set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
+" set tags+=~/.vim/tags/qt-4.8.1-ubuntu.tags
+" set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
 " set tags+=~/.vim/tags/cocos2dx-21rc0.tags
 let OmniCpp_GlobalScopeSearch = 1
 let OmniCpp_NamespaceSearch = 1
@@ -69,7 +72,7 @@ let OmniCpp_ShowScopeInAbbr = 1
 set autoindent
 " Mine
 set et sw=4 ts=4 sts=4
-" set et ai sw=4 ts=4 sts=4 tw=80 cino="(0,W2s,i2s,t0,l1,:0"
+set et ai sw=4 ts=4 sts=4 tw=80 cino="(0,W2s,i2s,t0,l1,:0"
 
 " two-space indentation
 autocmd BufNewFile,BufRead /home/kedz/Work/v*/* set et sw=2 ts=2 sts=2

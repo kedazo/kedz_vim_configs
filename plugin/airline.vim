@@ -1,6 +1,10 @@
 " MIT License. Copyright (c) 2013-2014 Bailey Ling.
 " vim: et ts=2 sts=2 sw=2
 
+" this disables the plugin (dkedves): i don't need
+" it now, has too much errors :-S
+let g:loaded_airline = 1
+
 if &cp || v:version < 702 || (exists('g:loaded_airline') && g:loaded_airline)
   finish
 endif

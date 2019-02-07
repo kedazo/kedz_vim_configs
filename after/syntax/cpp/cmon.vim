@@ -639,6 +639,14 @@ syntax keyword cppSTLtype QString
 syntax keyword cppSTLtype QFile
 
 "
+" G Library stuff
+"
+syntax keyword cppSTLtype guint
+syntax keyword cppSTLtype gint
+syntax keyword cppSTLtype gchar
+syntax keyword cppSTLtype gboolean
+
+"
 " Cmon stuff
 "
 syntax keyword cppSTLtype uint
@@ -646,6 +654,12 @@ syntax keyword cppSTLtype ulong
 syntax keyword cppSTLtype ulonglong
 syntax keyword cppSTLtype longlong
 syntax keyword cppSTLtype Severity
+syntax keyword cppSTLtype CmonPointer
+syntax keyword cppSTLtype CmonEventMask
+syntax keyword cppSTLtype CmonEventCallback
+syntax keyword cppSTLtype CmonEventHandler
+syntax keyword cppSTLtype CmonCommandHandlerWorker
+syntax keyword cppSTLtype CmonRecoveryState
 syntax keyword cppSTLtype CmonBackup
 syntax keyword cppSTLtype CmonBackupId
 syntax keyword cppSTLtype CmonBackupDb
@@ -677,9 +691,16 @@ syntax keyword cppSTLtype CmonConfigFileSet
 syntax keyword cppSTLtype CmonTimedValue
 syntax keyword cppSTLtype CmonAdvice
 syntax keyword cppSTLtype CmonHostManager 
+syntax keyword cppSTLtype CmonHostLocker
+syntax keyword cppSTLtype CmonMaintenanceInfo
+syntax keyword cppSTLtype CmonMaintenanceDate
 syntax keyword cppSTLtype CmonReplicationRole
 syntax keyword cppSTLtype CmonSqlConnectionType
 syntax keyword cppSTLtype CmonJob
+syntax keyword cppSTLtype CmonJobInstance
+syntax keyword cppSTLtype CmonJobMessage
+syntax keyword cppSTLtype CmonJobOwner
+syntax keyword cppSTLtype CmonJobStatus
 syntax keyword cppSTLtype CmonJobId
 syntax keyword cppSTLtype CmonJobPrivate
 syntax keyword cppSTLtype CmonClusterConfig
@@ -713,13 +734,19 @@ syntax keyword cppSTLtype CmonCommandString
 syntax keyword cppSTLtype CmonPath
 syntax keyword cppSTLtype CmonFile
 syntax keyword cppSTLtype CmonFilePrivate
+syntax keyword cppSTLtype CmonFileSet
 syntax keyword cppSTLtype CmonVirtualFilesystem
 syntax keyword cppSTLtype CmonDir
 syntax keyword cppSTLtype CmonTemporaryFile
 syntax keyword cppSTLtype CmonHostName
 syntax keyword cppSTLtype CmonHaProxyHost
+syntax keyword cppSTLtype CmonKeepalivedHost
 syntax keyword cppSTLtype CmonLogSource
 syntax keyword cppSTLtype CmonIpAddress
+syntax keyword cppSTLtype CmonParamSpec
+syntax keyword cppSTLtype CmonParamFlags
+syntax keyword cppSTLtype CmonParamChangeFlags
+syntax keyword cppSTLtype CmonMetaClass
 syntax keyword cppSTLtype CmonMetaType
 syntax keyword cppSTLtype CmonMetaTypeId
 syntax keyword cppSTLtype CmonTypeInfo
@@ -729,6 +756,8 @@ syntax keyword cppSTLtype CmonVariant
 syntax keyword cppSTLtype CmonVariantArray
 syntax keyword cppSTLtype CmonClusterId
 syntax keyword cppSTLtype CmonClusterType
+syntax keyword cppSTLtype CmonClusterEvent
+syntax keyword cppSTLtype CmonClusterInfo
 syntax keyword cppSTLtype CmonCluster
 syntax keyword cppSTLtype CmonAbstractMySqlCluster
 syntax keyword cppSTLtype CmonAbstractPostgreSqlCluster
@@ -738,6 +767,10 @@ syntax keyword cppSTLtype CmonNullCluster
 syntax keyword cppSTLtype CmonMutex
 syntax keyword cppSTLtype CmonMutexLocker
 syntax keyword cppSTLtype CmonDb
+syntax keyword cppSTLtype Communication
+syntax keyword cppSTLtype SSH
+syntax keyword cppSTLtype SSHHelper
+syntax keyword cppSTLtype CmonLicense
 syntax keyword cppSTLtype CmonAlarmDb
 syntax keyword cppSTLtype ClusterNode
 syntax keyword cppSTLtype CmonConfiguration
@@ -761,6 +794,7 @@ syntax keyword cppSTLtype CmonMySqlHost
 syntax keyword cppSTLtype CmonMySqlHostList
 syntax keyword cppSTLtype CmonMaxScaleHost
 syntax keyword cppSTLtype CmonHost
+syntax keyword cppSTLtype CmonHostStatus
 syntax keyword cppSTLtype CmonNdbHost
 syntax keyword cppSTLtype CmonDomain
 syntax keyword cppSTLtype CmonMongoNode
@@ -794,6 +828,7 @@ syntax keyword cppSTLtype CmonMySqlCollector
 syntax keyword cppSTLtype CmonLogCollector 
 syntax keyword cppSTLtype CmonProcess
 syntax keyword cppSTLtype CmonProcessManager
+syntax keyword cppSTLtype CmonCollectorReport
 syntax keyword cppSTLtype CmonProcessCollector
 syntax keyword cppSTLtype CmonHostCollector
 syntax keyword cppSTLtype CmonLogMessage
@@ -822,6 +857,8 @@ syntax keyword cppSTLtype CmonCellFunctions
 syntax keyword cppSTLtype CmonFunctionId
 syntax keyword cppSTLtype CmonInfoSource
 syntax keyword cppSTLtype CmonStats
+syntax keyword cppSTLtype CmonStats
+syntax keyword cppSTLtype CmonTcpStats
 syntax keyword cppSTLtype CmonSqlStats
 syntax keyword cppSTLtype CmonStatistics
 syntax keyword cppSTLtype CmonStatisticsPrivate
@@ -848,6 +885,76 @@ syntax keyword cppSTLtype CmonCron
 syntax keyword cppSTLtype CmonDeliveryOptions
 syntax keyword cppSTLtype CmonDeliverySettings
 syntax keyword cppSTLtype CmonBinaryRecord
+syntax keyword cppSTLtype CmonDocument
+syntax keyword cppSTLtype CmonDocumentSection
+syntax keyword cppSTLtype CmonDocumentElement
+syntax keyword cppSTLtype CmonParagraph 
+syntax keyword cppSTLtype CmonRawElement
+syntax keyword cppSTLtype CmonVerbatim
+syntax keyword cppSTLtype CmonTitle
+syntax keyword cppSTLtype CmonTable
+syntax keyword cppSTLtype CmonTableOfContents
+syntax keyword cppSTLtype CmonTocEntry
+syntax keyword cppSTLtype CmonMaasHost
+syntax keyword cppSTLtype CmonUnitTest
+syntax keyword cppSTLtype CmonFunctionalTest
+syntax keyword cppSTLtype CmonProcessSet
+syntax keyword cppSTLtype CmonProcessMap
+syntax keyword cppSTLtype CmonSemaphore
+syntax keyword cppSTLtype CmonEvent
+syntax keyword cppSTLtype CmonEventLoop
+syntax keyword cppSTLtype CmonRpcHandler
+syntax keyword cppSTLtype CmonRpcAlarmHandler
+syntax keyword cppSTLtype CmonRpcSettingsHandler
+syntax keyword cppSTLtype CmonRpcProcHandler
+syntax keyword cppSTLtype CmonRpcReply
+syntax keyword cppSTLtype CmonRpcRequest
+syntax keyword cppSTLtype CmonDiskInfo
+syntax keyword cppSTLtype CmonProcessStatCollector
+syntax keyword cppSTLtype CmonTestResult
+syntax keyword cppSTLtype CmonLogEntry
+syntax keyword cppSTLtype CmonLogEntryId
+syntax keyword cppSTLtype CmonLogger
+syntax keyword cppSTLtype CmonClusterLogger
+syntax keyword cppSTLtype CmonUser
+syntax keyword cppSTLtype CmonUserId
+syntax keyword cppSTLtype CmonGroup
+syntax keyword cppSTLtype CmonGroupId
+syntax keyword cppSTLtype CmonUserManager
+syntax keyword cppSTLtype CmonBackupRecord
+syntax keyword cppSTLtype CmonRpcV2Reply
+syntax keyword cppSTLtype CmonRpcV2Users
+syntax keyword cppSTLtype CmonRpcV2Auth 
+syntax keyword cppSTLtype CmonRpcV2Backup
+syntax keyword cppSTLtype CmonRpcV2Clusters
+syntax keyword cppSTLtype CmonRpcV2Config
+syntax keyword cppSTLtype CmonRpcV2Jobs
+syntax keyword cppSTLtype CmonRpcV2Info
+syntax keyword cppSTLtype CmonRpcV2Host
+syntax keyword cppSTLtype CmonRpcV2Stat
+syntax keyword cppSTLtype CmonRpcV2Process
+syntax keyword cppSTLtype CmonRpcV2Alarm
+syntax keyword cppSTLtype CmonRpcStatHandler
+syntax keyword cppSTLtype CmonRpcJobsHandler
+syntax keyword cppSTLtype CmonRpcSheetHandler
+syntax keyword cppSTLtype CmonRpcImperativeHandler
+syntax keyword cppSTLtype CmonRpcLogHandler
+syntax keyword cppSTLtype CmonRpcLoggerHandler
+syntax keyword cppSTLtype CmonRpcConfigHandler
+syntax keyword cppSTLtype CmonRpcClustersHandler
+syntax keyword cppSTLtype CmonRpcReposHandler
+syntax keyword cppSTLtype CmonRpcReportsHandler
+syntax keyword cppSTLtype CmonRpcCaHandler
+syntax keyword cppSTLtype CmonRpcBackupHandler
+syntax keyword cppSTLtype CmonRpcAuthHandler
+syntax keyword cppSTLtype CmonRpcDiscoveryHandler
+syntax keyword cppSTLtype CmonRpcProxySqlHandler
+syntax keyword cppSTLtype CmonLoadBalancer
+syntax keyword cppSTLtype MaxScale
+syntax keyword cppSTLtype Garbd
+syntax keyword cppSTLtype Keepalived
+syntax keyword cppSTLtype CmonHaProxy
+syntax keyword cppSTLtype ProxySql
 
 syntax keyword cppSTLenum NodeType
 syntax keyword cppSTLenum DeliveryType
@@ -862,6 +969,7 @@ syntax keyword cppSTLnamespace CmonConnect
 
 syntax keyword cppSTLconstant JOB_SUCCESS
 syntax keyword cppSTLconstant JOB_FAILED
+syntax keyword cppSTLconstant JOB_WARNING
 
 if !exists("cpp_no_cpp11")
     syntax keyword cppSTLtype nullptr_t max_align_t
