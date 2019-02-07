@@ -56,12 +56,18 @@ if !exists('g:airline_symbols')
   let g:airline_symbols.space = "\ua0"
 
 map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+map <C-F11> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=go --go-kinds=+p --fields=+iaS --extra=+q .<CR>
 " map <C-F11> :!indent -nbbo -nut -linux -l85 -ci4 -br -brs -brf *.c *.h<CR>
 map <F12> :TlistToggle<CR>
 map <F4> :call Pipas_Open_Header()<Esc>
 map <F5> dwj
 
+" go language
+let s:tlist_def_go_settings = 'go;g:enum;s:struct;u:union;t:type;' .
+                           \ 'v:variable;f:function'
+
 set tags+=~/.vim/tags/cpp_stl.tags
+set tags+=~/.vim/tags/opt_go_src.tags
 " set tags+=~/.vim/tags/qt-4.8.1-ubuntu.tags
 " set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
 " set tags+=~/.vim/tags/cocos2dx-21rc0.tags
