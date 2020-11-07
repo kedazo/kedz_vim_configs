@@ -57,6 +57,9 @@ if !exists('g:airline_symbols')
 
 map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 map <C-F11> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=go --go-kinds=+p --fields=+iaS --extra=+q .<CR>
+map <S-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
+map <S-F11> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=go --go-kinds=+p --fields=+iaS --extra=+q .<CR>
+
 " map <C-F11> :!indent -nbbo -nut -linux -l85 -ci4 -br -brs -brf *.c *.h<CR>
 map <F12> :TlistToggle<CR>
 map <F4> :call Pipas_Open_Header()<Esc>
