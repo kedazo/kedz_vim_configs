@@ -43,17 +43,30 @@ set ttimeoutlen=50
 " but this one ok for 8 colors:
 let g:airline_theme = 'tomorrow'
 let g:airline#extensions#hunks#enabled=0
-let g:airline#extensions#branch#enabled=1
+let g:airline#extensions#branch#enabled=0
 
 " install first: https://github.com/powerline/fonts
 " and change gnome-terminal font to
 " 'Ubuntu Mono derivative Powerline Regular 12'
 let g:airline_powerline_fonts=1
+" don't render empty sections (leftover separators around inactive chunks)
+let g:airline_skip_empty_sections=1
 
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
   endif
   let g:airline_symbols.space = "\ua0"
+  " pre-v0.12 line-number glyph (branch icon, no colon; v0.12 uses " :")
+  let g:airline_symbols.linenr = ""
+
+" airline v0.12 changed the right side to ':%l/%L' + maxlinenr'≡' + colnr'℅'
+" restore the old look: percent + line:col packed tight, no padding
+function! Pipas_Airline_Old_Statusline()
+  let g:airline_section_z = airline#section#create(['windowswap', '%3p%%' . g:airline_symbols.space, '%{g:airline_symbols.linenr}%l:%v'])
+  " keep the current-function chunk, drop the redundant filetype (cpp)
+  let g:airline_section_x = airline#section#create_right(['coc_current_function', 'bookmark', 'scrollbar', 'tagbar', 'taglist', 'vista', 'gutentags', 'gen_tags', 'omnisharp', 'grepper', 'codeium'])
+endfunction
+autocmd User AirlineAfterInit call Pipas_Airline_Old_Statusline()
 
 map <C-F12> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=c++ --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 map <C-F11> :!ctags -R -I --exclude=*doc* --exclude=*debian* --exclude=*stub* --exclude=*ut_* --exclude=*ft_* --languages=go --go-kinds=+p --fields=+iaS --extra=+q .<CR>
@@ -71,6 +84,7 @@ let s:tlist_def_go_settings = 'go;g:enum;s:struct;u:union;t:type;' .
 
 set tags+=~/.vim/tags/cpp_stl.tags
 set tags+=~/.vim/tags/opt_go_src.tags
+set tags+=~/.vim/tags/qt-6.11.0.tags
 " set tags+=~/.vim/tags/qt-4.8.1-ubuntu.tags
 " set tags+=~/.vim/tags/qtmobility-1.2.0-ubuntu.tags
 " set tags+=~/.vim/tags/cocos2dx-21rc0.tags
