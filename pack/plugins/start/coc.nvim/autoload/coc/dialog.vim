@@ -22,9 +22,15 @@ function! coc#dialog#create_pum_float(lines, config) abort
   let pw = pumbounding['width'] + (pumbounding['border'] ? 0 : get(pumbounding, 'scrollbar', 0))
   let rp = &columns - pumbounding['col'] - pw
   let showRight = pumbounding['col'] > rp ? 0 : 1
-  let maxWidth = showRight ? min([rp - 1, a:config['maxWidth']]) : min([pumbounding['col'] - 1, a:config['maxWidth']])
   let bh = get(border, 0 ,0) + get(border, 2, 0)
-  let maxHeight = &lines - pumbounding['row'] - &cmdheight - 1 - bh
+  " LOCAL PATCH: stack the doc window ABOVE the pum (VSCode-like detail on
+  " top) when there is room above it; otherwise the stock side-by-side
+  " placement below.
+  let showAbove = pumbounding['row'] - bh >= 1
+  let maxWidth = showAbove ? min([a:config['maxWidth'], &columns - 2])
+        \ : showRight ? min([rp - 1, a:config['maxWidth']]) : min([pumbounding['col'] - 1, a:config['maxWidth']])
+  let maxHeight = showAbove ? pumbounding['row'] - bh
+        \ : &lines - pumbounding['row'] - &cmdheight - 1 - bh
   if maxWidth <= 2 || maxHeight < 1
     return v:null
   endif
@@ -37,15 +43,20 @@ function! coc#dialog#create_pum_float(lines, config) abort
   let ch = coc#string#content_height(a:lines, width - 2)
   let height = ch < maxHeight ? ch : maxHeight
   let lines = map(a:lines, {_, s -> s =~# '^─' ? repeat('─', width - 2 + (s:is_vim && ch > height ? -1 : 0)) : s})
+  if showAbove
+    let col = max([0, min([pumbounding['col'], &columns - width])])
+  else
+    let col = showRight ? pumbounding['col'] + pw : pumbounding['col'] - width
+  endif
   let opts = {
         \ 'lines': lines,
         \ 'highlights': get(a:config, 'highlights', []),
         \ 'relative': 'editor',
-        \ 'col': showRight ? pumbounding['col'] + pw : pumbounding['col'] - width,
-        \ 'row': pumbounding['row'],
+        \ 'col': col,
+        \ 'row': showAbove ? pumbounding['row'] - height - bh : pumbounding['row'],
         \ 'height': height,
         \ 'width': width - 2 + (s:is_vim && ch > height ? -1 : 0),
-        \ 'scrollinside': showRight ? 0 : 1,
+        \ 'scrollinside': showAbove || !showRight ? 1 : 0,
         \ 'codes': get(a:config, 'codes', []),
         \ }
   for key in ['border', 'highlight', 'borderhighlight', 'winblend', 'focusable', 'shadow', 'rounded', 'title']
