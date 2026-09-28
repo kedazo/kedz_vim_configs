@@ -105,6 +105,9 @@ autocmd BufNewFile,BufRead /home/kedz/Work/v*/* set et sw=2 ts=2 sts=2
 let g:go_def_mapping_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
 
+" coc config lives HERE, not in ~/.config/coc/settings.json (see :h coc#config)
+call coc#config('inlayHint.enableParameter', v:false)
+
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes

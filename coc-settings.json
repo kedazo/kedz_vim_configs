@@ -2,6 +2,8 @@
   "suggest.autoTrigger": "always",
   "suggest.floatConfig": { "border": true },
 
+  "inlayHint.enable": false,
+
   "clangd.path": "/usr/bin/clangd",
   "clangd.arguments": [
     "--background-index",
