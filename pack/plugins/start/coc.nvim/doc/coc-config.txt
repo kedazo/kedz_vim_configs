@@ -1,0 +1,2397 @@
+*coc-config.txt*				NodeJS client for Vim & Neovim.
+
+CONTENTS
+
+Core features
+	Workspace 				|coc-config-workspace|
+	File system watch 			|coc-config-fileSystemWatch|
+	Extensions 				|coc-config-extensions|
+	Preferences 				|coc-config-preferences|
+	Editor 					|coc-config-editor|
+	Float factory 				|coc-config-floatFactory|
+	Float 					|coc-config-float|
+	Tree 					|coc-config-tree|
+	Dialog 					|coc-config-dialog|
+	Http 					|coc-config-http|
+	Npm 					|coc-config-npm|
+	Language server 			|coc-config-languageserver|
+	MCP 					|coc-config-mcp|
+
+LSP features
+	Call hierarchy 				|coc-config-callHierarchy|
+	CodeLens 				|coc-config-codeLens|
+	Colors 					|coc-config-colors|
+	Completion 				|coc-config-suggest|
+	Sources 				|coc-config-sources|
+	Inline completion 			|coc-config-inlineSuggest|
+	Next edit 				|coc-config-nextEdit|
+	Cursors 				|coc-config-cursors|
+	Diagnostics 				|coc-config-diagnostic|
+	Document highlight 			|coc-config-documentHighlight|
+	Hover 					|coc-config-hover|
+	Inlay hint 				|coc-config-inlayHint|
+	Links 					|coc-config-links|
+	List 					|coc-config-list|
+	Notification 				|coc-config-notification|
+	Outline 				|coc-config-outline|
+	Pull diagnostics 			|coc-config-pullDiagnostic|
+	Refactor 				|coc-config-refactor|
+	Semantic tokens 			|coc-config-semanticTokens|
+	Signature 				|coc-config-signature|
+	Type hierarchy				|coc-config-typeHierarchy|
+
+==============================================================================
+BUILTIN CONFIGURATIONS 					*coc-config*
+
+Builtin configurations of coc.nvim. It's recommended to use the `coc-json`
+extension for completion and validation support.
+
+==============================================================================
+
+CORE FEATURES
+
+Configurations of builtin features.
+
+------------------------------------------------------------------------------
+WORKSPACE
+							*coc-config-workspace*
+
+"workspace.rootPatterns"				*coc-config-workspace-rootPatterns*
+
+	Root patterns used to resolve the workspaceFolder from the parent
+	folders of opened files, resolved from the top down.
+
+	Scope: `application`, default: `[".git",".hg",".projections.json"]`
+
+"workspace.bottomUpFiletypes"				*coc-config-workspace-bottomUpFiletypes*
+
+	Filetypes for which the workspace folder should be resolved from the base
+	directory of the file, or ["*"] for any filetype.
+
+	Scope: `application`, default: `[]`
+
+"workspace.ignoredFiletypes"				*coc-config-workspace-ignoredFiletypes*
+
+	Filetypes that should be ignored when resolving the workspace folder.
+
+	Scope: `application`, default: `[]`
+
+"workspace.ignoredFolders"				*coc-config-workspace-ignoredFolders*
+
+	List of folders that should not be resolved as the workspace folder;
+	environment variables and minimatch patterns can be used.
+
+	Default value: >
+	[
+	  "$HOME",
+	  "$HOME/.cargo/**",
+	  "$HOME/.rustup/**",
+	  "$HOME/pkg/mod/**",
+	  "$HOMEBREW_PREFIX/**"
+	]
+<
+	Scope: `application`
+
+"workspace.openOutputCommand"				*coc-config-workspace-openOutputCommand*
+
+	Command used to open the output channel.
+
+	Scope: `resource`, default: `"vs"`
+
+"workspace.openResourceCommand"				*coc-config-workspace-openResourceCommand*
+
+	Command used to open files that aren't loaded; files are loaded as
+	hidden buffers when empty.
+
+	Scope: `application`, default: `"tab drop"`
+
+"workspace.workspaceFolderCheckCwd"			*coc-config-workspace-workspaceFolderCheckCwd*
+
+	Whether the current working directory should be used first when
+	checking pattern matches for the workspace folder.
+
+	Scope: `application`, default: `true`
+
+"workspace.workspaceFolderFallbackCwd"			*coc-config-workspace-workspaceFolderFallbackCwd*
+
+	Use the current working directory as the workspace folder when no root
+	patterns are resolved.
+
+	Scope: `application`, default: `true`
+
+"workspace.removeEmptyWorkspaceFolder"			*coc-config-workspace-removeEmptyWorkspaceFolder*
+
+	Automatically remove the workspace folder when no buffer is associated
+	with it.
+
+	Scope: `application`, default: `false`
+
+------------------------------------------------------------------------------
+FILESYSTEMWATCH 					*coc-config-fileSystemWatch*
+
+"fileSystemWatch.watchmanPath" 				*coc-config-fileSystemWatch-watchmanPath*
+
+	Executable path for https://facebook.github.io/watchman/. When nonempty,
+	coc.nvim tries this Watchman executable once before falling back to the
+	bundled native watcher. Otherwise, coc.nvim tries the native watcher first,
+	then looks up Watchman on $PATH if it fails. When neither works, file
+	watching fails silently and writes error logs to the watchman output channel.
+	
+	Scope: `application`, default: `null`
+
+"fileSystemWatch.enable" 				*coc-config-fileSystemWatch-enable*
+
+	Enable file system watch support for workspace folders.
+	
+	Scope: `application`, default: `true`
+
+"fileSystemWatch.ignoredFolders" 			*coc-config-fileSystemWatch-ignoredFolders*
+
+	List of folders that should not be watched for file changes. Root selection
+	keeps its existing environment-variable and minimatch behavior.
+
+	The bundled native watcher forwards these entries to its backend, avoiding
+	OS watcher resources for ignored directory trees. Set an empty list to
+	disable the defaults.
+	For the bundled native watcher, forwarded subtree exclusions support `*`
+	within one path component and `**` as a complete component. Other glob
+	punctuation is literal. Watchman and event patterns keep minimatch behavior.
+
+	Scope: `application`, default: `["/private/tmp", "/", "${tmpdir}",
+	"**/.git", "**/.git/**", "**/node_modules", "**/node_modules/**"]`
+
+------------------------------------------------------------------------------
+EXTENSIONS
+							*coc-config-extensions*
+
+"extensions.updateCheck" 				*coc-config-extensions-updateCheck*
+
+	Interval for checking extension updates; can be daily, weekly, or never.
+
+	Scope: `application`, default: `"never"`
+
+"extensions.silentAutoupdate" 				*coc-config-extensions-silentAutoupdate*
+
+	Don't open a split window with update status when performing auto
+	updates.
+
+	Scope: `application`, default: `true`
+
+"extensions.updateUIInTab" 				*coc-config-extensions-updateUIInTab*
+
+	Open `CocUpdate` UI in new tab.
+
+	Scope: `application`, default: `false`
+
+"extensions.recommendations" 				*coc-config-extensions-recommendations*
+
+	List of extensions recommended for installation in the current project.
+	Only works as workspace folder configuration.
+
+	Scope: `resource`, default: `[]`
+
+------------------------------------------------------------------------------
+PREFERENCES
+							*coc-config-preferences*
+
+"coc.preferences.bracketEnterImprove"			*coc-preferences-bracketEnterImprove*
+
+	Improve pressing enter inside brackets `<> {} [] ()` by adding a new
+	empty line below and placing the cursor on it. Works with
+	`coc#on_enter()`.
+
+	Scope: `language-overridable`, default: `true`
+
+"coc.preferences.currentFunctionSymbolAutoUpdate"	*coc-preferences-currentFunctionSymbolAutoUpdate*
+
+	Automatically update the value of b:coc_current_function on the
+	CursorMove event.
+
+	Scope: `language-overridable`, default: `false`
+
+"coc.preferences.currentFunctionSymbolDebounceTime"	*coc-preferences-currentFunctionSymbolDebounceTime*
+
+	Set the debounce timer for the update of b:coc_current_function on the
+	CursorMove event.
+
+	Scope: `application`, default: `300`
+
+"coc.preferences.enableLinkedEditing"			*coc-preferences-enableLinkedEditing*
+
+	Enable linked editing support.
+
+	Scope: `language-overridable`, default: `false`
+
+"coc.preferences.enableMarkdown"			*coc-preferences-enableMarkdown*
+
+	Tell the language server that markdown text format is supported; note
+	that markdown text may not be rendered as expected.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.enableMessageDialog"		*coc-preferences-enableMessageDialog*
+
+	When enabled, messages are always shown through the notification
+	interface, even when the message has action items (which would
+	otherwise use |coc-preferences-messageDialogKind|).
+
+	Scope: `application`, default: `false`
+
+"coc.preferences.messageDialogKind"			*coc-preferences-messageDialogKind*
+
+	Method to use when showing interactive messages to the user
+
+	Scope: `application`, default: `confirm`
+
+"coc.preferences.messageReportKind"			*coc-preferences-messageReportKind*
+
+	Method to use when printing or showing plain user messages
+
+	Scope: `application`, default: `echo`
+
+"coc.preferences.excludeImageLinksInMarkdownDocument"	*coc-preferences-excludeImageLinksInMarkdownDocument*
+
+	Exclude image links from markdown text in float windows.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.enableGFMBreaksInMarkdownDocument"	*coc-preferences-enableGFMBreaksInMarkdownDocument*
+
+	Enable GFM breaks in markdown documents.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.floatActions"				*coc-preferences-floatActions*
+
+	Set to false to disable float/popup support for the actions menu.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.codeActionsShowKind"			*coc-preferences-codeActionsShowKind*
+
+	Set to true to show kind in the code actions menu.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.formatOnSave"				*coc-preferences-formatOnSave*
+
+	Set to true to enable formatting on save.
+
+	Scope: `language-overridable`, default: `false`
+
+"coc.preferences.formatOnSaveTimeout"			*coc-preferences-formatOnSaveTimeout*
+
+	How long before the format command run on save times out.
+
+	Scope: `language-overridable`, default: `500`
+
+"coc.preferences.formatOnType"				*coc-preferences-formatOnType*
+
+	Set to true to enable formatting on typing.
+
+	Scope: `language-overridable`, default: `false`
+
+"coc.preferences.formatterExtension" 			*coc-preferences-formatterExtension*
+
+	Extension used for formatting documents. When set to null, the
+	formatter with highest priority is used.
+
+	Scope: `language-overridable`, default: `null`
+
+"coc.preferences.jumpCommand"				*coc-preferences-jumpCommand*
+
+	Command used for location jumps, like goto definition and goto
+	references. Can also be a custom command that takes a file as an
+	argument.
+
+	Scope: `application`, default: `"edit"`
+
+"coc.preferences.maxFileSize"				*coc-preferences-maxFileSize*
+
+	Maximum file size in bytes that coc.nvim should handle. Default:
+	'10MB'.
+
+	Scope: `application`, default: `"10MB"`
+
+"coc.preferences.messageLevel"				*coc-preferences-messageLevel*
+
+	Message level for filtering echoed messages; can be 'more', 'warning',
+	or 'error'.
+
+	Scope: `application`, default: `"more"`
+
+"coc.preferences.promptInput"				*coc-preferences-promptInput*
+
+	Use a prompt buffer in a float window for user input.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.renameFillCurrent"			*coc-preferences-renameFillCurrent*
+
+	Set to false to stop the Refactor-Rename float/popup window from
+	populating the New Name field with the old name.
+
+	Scope: `application`, default: `true`
+
+"coc.preferences.useQuickfixForLocations"		*coc-preferences-useQuickfixForLocations*
+
+	Use Vim's quickfix list for jump locations; a restart is required when
+	changed.
+
+	Scope: `application`, default: `false`
+
+"coc.preferences.willSaveHandlerTimeout"		*coc-preferences-willSaveHandlerTimeout*
+
+	Timeout of the will-save handler.
+
+	Scope: `application`, default: `500`
+
+"coc.preferences.tagDefinitionTimeout" 			*coc-preferences-tagDefinitionTimeout*
+
+	Timeout of CocTagFunc; defaults to infinity.
+	Scope: `application`, default: `0`
+
+"coc.preferences.autoApplySingleQuickfix"		*coc-preferences-autoApplySingleQuickfix*
+
+	Automatically apply the single quickfix action.
+
+	Scope: `application`, default: `true`
+------------------------------------------------------------------------------
+EDITOR
+							*coc-config-editor*
+							*coc-config-editor-codeActionsOnSave*
+
+"editor.codeActionsOnSave"
+
+	Run code actions for the buffer on save, normally source actions. Example:
+	`"source.organizeImports": "always"`.
+
+	Scope: `language-overridable`, default: `{}`
+
+							*coc-config-editor-autocmdTimeout*
+
+"editor.autocmdTimeout"
+
+	Timeout in milliseconds for the execute-request autocmd registered by
+	coc extensions.
+
+	Scope: `application`, default: `1000`
+
+"editor.fileOperationTimeout"				*coc-config-editor-fileOperationTimeout*
+
+	Timeout in milliseconds for the waitUntil handlers of file create,
+	delete, and rename events. Handlers resolving after the timeout are
+	ignored and their WorkspaceEdit isn't applied.
+
+	Scope: `application`, default: `500`
+
+------------------------------------------------------------------------------
+FLOATfACTORY
+							*coc-config-floatFactory*
+
+"floatFactory.floatConfig"				*coc-config-floatFactory-floatConfig*
+
+	Configure the default float window/popup style created by the float
+	factory (created around the cursor and automatically closed).
+
+	Scope: `application`, default: `null`
+
+
+------------------------------------------------------------------------------
+FLOAT CONFIGURATION
+							*coc-config-float*
+
+Used by `floatFactory.floatConfig`, `suggest.floatConfig`,
+`diagnostic.floatConfig`, `signature.floatConfig`, and `hover.floatConfig`.
+The following properties are supported:
+
+	- "border": Set to `true` to enable the border.
+	- "rounded": Use rounded borders when border is `true`.
+	- "highlight": Background highlight group of the float window, default:
+	  `"CocFloating"`.
+	- "title": Title text used by the float window, default: `""`.
+	- "borderhighlight": Border highlight group of the float window, default:
+	  `"CocFloatBorder"`.
+	- "close": Set to `true` to draw close icon.
+	- "maxWidth": Maximum width of the float window, including the border.
+	- "maxHeight": Maximum height of the float window, including the border.
+	- "winblend": Set the 'winblend' option of the window (Neovim only),
+	  default:
+	  `0`.
+	- "focusable": Set to false to make the window not focusable (Neovim
+	  only).
+	- "shadow": Set to true to enable shadow (Neovim only).
+	- "position": Controls how floating windows are positioned. When set
+	  to `'fixed'`, the window will be positioned according to the `top`,
+	  `bottom`, `left`, and `right` settings. When set to `'auto'`, the
+	  window follows the default position.
+	- "top": Distance from the top of the editor window in characters.
+	  Only takes effect when `position` is set to `'fixed'`, and is
+	  ignored if `bottom` is set.
+	- "bottom": Distance from the bottom of the editor window in
+	  characters. Only takes effect when `position` is set to `'fixed'`.
+	  Takes precedence over `top` if both are set.
+	- "left": Distance from the left edge of the editor window in
+	  characters. Only takes effect when `position` is set to `'fixed'`,
+	  and is ignored if `right` is set.
+	- "right": Distance from the right edge of the editor window in
+	  characters. Only takes effect when `position` is set to `'fixed'`.
+	  Takes precedence over `left` if both are set.
+
+------------------------------------------------------------------------------
+TREE
+							*coc-config-tree*
+
+Configurations for tree view.
+
+"tree.openedIcon"					*coc-config-tree-openedIcon*
+
+	Opened icon of the tree view.
+
+	Scope: `application`, default: `"-"`
+
+"tree.closedIcon"					*coc-config-tree-closedIcon*
+
+	Closed icon of the tree view.
+
+	Scope: `application`, default: `"+"`
+
+"tree.key.actions"					*coc-config-tree-key-actions*
+
+	Trigger key to invoke actions.
+
+	Scope: `application`, default: `"<tab>"`
+
+"tree.key.activeFilter"					*coc-config-tree-key-activeFilter*
+
+	Trigger key to activate the filter.
+
+	Scope: `application`, default: `"f"`
+
+"tree.key.close"					*coc-config-tree-key-close*
+
+	Trigger key to dispose the tree and close the tree window.
+
+	Scope: `application`, default: `"<esc>"`
+
+"tree.key.collapseAll"					*coc-config-tree-key-collapseAll*
+
+	Trigger key to collapse all tree nodes.
+
+	Scope: `application`, default: `"M"`
+
+"tree.key.invoke"					*coc-config-tree-key-invoke*
+
+	Trigger key to invoke the default command of the current node or
+	selection.
+
+	Scope: `application`, default: `"<cr>"`
+
+"tree.key.selectNext"					*coc-config-tree-key-selectNext*
+
+	Trigger key to select the next item during filtering.
+
+	Scope: `application`, default: `"<C-j>"`
+
+"tree.key.selectPrevious"				*coc-config-tree-key-selectPrevious*
+
+	Trigger key to select the previous item during filtering.
+
+	Scope: `application`, default: `"<C-k>"`
+
+"tree.key.toggle"					*coc-config-tree-key-toggle*
+
+	Trigger key to toggle the expand state of a tree node; does nothing
+	for leaf nodes.
+
+	Scope: `application`, default: `"t"`
+
+"tree.key.toggleSelection"				*coc-config-tree-key-toggleSelection*
+
+	Trigger key to select/unselect an item.
+
+	Scope: `application`, default: `"<space>"`
+
+------------------------------------------------------------------------------
+DIALOG
+							*coc-config-dialog*
+Configurations for dialog windows.
+
+"dialog.confirmKey"					*coc-config-dialog-confirmKey*
+
+	Key used to confirm selection in menus and pickers; you can always use
+	<esc> to cancel.
+
+	Scope: `application`, default: `"<cr>"`
+
+"dialog.floatBorderHighlight"				*coc-config-dialog-floatBorderHighlight*
+
+	Highlight group for the border of dialog windows/popups; defaults to
+	'CocFloatBorder'.
+
+	Scope: `application`, default: `null`
+
+"dialog.floatHighlight"					*coc-config-dialog-floatHighlight*
+
+	Highlight group for dialog windows/popups; defaults to 'CocFloating'.
+
+	Scope: `application`, default: `null`
+
+"dialog.maxHeight"					*coc-config-dialog-maxHeight*
+
+	Maximum height of the dialog window.
+
+	Scope: `application`, default: `30`
+
+"dialog.maxWidth"					*coc-config-dialog-maxWidth*
+
+	Maximum width of the dialog window.
+
+	Scope: `application`, default: `80`
+
+"dialog.pickerButtonShortcut"				*coc-config-dialog-pickerButtonShortcut*
+
+	Show shortcuts in the buttons of the picker dialog window/popup; used
+	when `dialog.pickerButtons` is true.
+
+	Scope: `application`, default: `true`
+
+"dialog.pickerButtons"					*coc-config-dialog-pickerButtons*
+
+	Show buttons for the picker dialog window/popup.
+
+	Scope: `application`, default: `true`
+
+"dialog.rounded"					*coc-config-dialog-rounded*
+
+	Use a rounded border for dialog windows.
+
+	Scope: `application`, default: `true`
+
+"dialog.shortcutHighlight"				*coc-config-dialog-shortcutHighlight*
+
+	Highlight group for the shortcut character in the menu dialog; defaults to
+	'MoreMsg'.
+
+	Scope: `application`, default: `"MoreMsg"`
+
+------------------------------------------------------------------------------
+HTTP PROXY
+							*coc-config-http*
+
+Configurations for http requests, used by coc.nvim and some coc extensions.
+
+"http.proxy"						*coc-config-http-proxy*
+
+	The proxy setting to use. If not set, it's inherited from the
+	`http_proxy` and `https_proxy` environment variables.
+
+	Scope: `application`, default: `""`
+
+"http.proxyAuthorization"				*coc-config-http-proxyAuthorization*
+
+	The value to send as the `Proxy-Authorization` header for every network
+	request.
+
+	Scope: `application`, default: `null`
+
+"http.proxyCA"						*coc-config-http-proxyCA*
+
+	CA (file) to use as the Certificate Authority.
+
+	Scope: `application`, default: `null`
+
+"http.proxyStrictSSL"					*coc-config-http-proxyStrictSSL*
+
+	Controls whether the proxy server certificate should be verified
+	against the list of supplied CAs.
+
+	Scope: `application`, default: `true`
+
+------------------------------------------------------------------------------
+NPM
+							*coc-config-npm*
+
+"npm.binPath"						*coc-config-npm-binPath*
+
+	Command or absolute path to npm or yarn used for global extension
+	install/uninstall.
+
+	Scope: `application`, default: `"npm"`
+
+------------------------------------------------------------------------------
+LANGUAGESERVER
+							*coc-config-languageserver*
+
+	Dictionary of language servers: the key is the ID of the corresponding
+	server, and the value is the configuration of the language server.
+	Default: `{}`.
+
+	Properties of a language server configuration:
+
+	- "enable": Set to `false` to disable that language server.
+
+	- "filetypes": Supported filetypes; add `*` to the array for all
+	  filetypes. Note: this is required to start the language server. Make
+	  sure your filetype is the one expected by the
+	  `:CocCommand document.echoFiletype` command.
+
+	- 'maxRestartCount': Maximum restart count when server closed in the
+	  last 3 minutes, defaults to `4`.
+
+	- "additionalSchemes": Additional URI schemes; default schemes include
+	  file and untitled. Note: you also have to set up Vim to provide
+	  content for custom URIs.
+
+	- "cwd": Working directory used to start the language server; Vim's
+	  cwd is used by default.
+
+	- "env": Environment variables for child process.
+
+	- "settings": Settings for the language server, received on server
+	  initialization.
+
+	- "trace.server": Trace level of the communication between server and
+	  client, shown in the output channel. Open the output channel with
+	  `:CocCommand workspace.showOutput`.
+
+	- "stdioEncoding": Encoding used for stdio of child process.
+
+	- "initializationOptions": Initialization options passed to the
+	  language server (deprecated).
+
+	- "rootPatterns": Root patterns used to resolve the rootPath from the
+	  current file.
+
+	- "requireRootPattern": If true, the server isn't started when no root
+	  pattern is found.
+
+	- "ignoredRootPaths": Absolute root paths that the language server
+	  should not use as rootPath; takes priority over rootPatterns.
+
+	- "disableDynamicRegister": Disable the dynamic registerCapability
+	  feature for this language server to avoid duplicate feature
+	  registration.
+
+	- "disableSnippetCompletion": Disable the snippet completion feature
+	  for this language server.
+
+	- "disabledFeatures": Disable features for this language server;
+	  valid keys: >
+
+	  ["completion", "configuration", "workspaceFolders", "diagnostics",
+	  "willSave", "willSaveUntil", "didSaveTextDocument",
+	  "fileSystemWatcher", "hover", "signatureHelp", "definition",
+	  "references", "documentHighlight", "documentSymbol",
+	  "workspaceSymbol", "codeAction", "codeLens", "formatting",
+	  "documentFormatting", "documentRangeFormatting",
+	  "documentOnTypeFormatting", "rename", "documentLink",
+	  "executeCommand", "pullConfiguration", "typeDefinition",
+	  "implementation", "declaration", "color", "foldingRange",
+	  "selectionRange", "progress", "callHierarchy", "linkedEditing",
+	  "fileEvents", "semanticTokens"]
+<
+	- "languageIdMap": Map of filename to languageId used when the
+	  document is opened for this language server, which allows sending
+	  a languageId different from the filetype to a specific server,
+	  e.g. `{"application.yml": "spring-boot-properties-yaml"}`. The key
+	  can be a file name or an absolute path. Note the languageId
+	  affects only the documents opened for this language server.
+
+	- "formatterPriority": Priority of this languageserver's formatter.
+
+	- "revealOutputChannelOn": Configure the message level at which the
+	  output channel buffer is shown.
+
+	- "progressOnInitialization": Enable progress reporting during
+	  language server initialization.
+
+Language server started with a command: ~
+
+	Additional fields for a command-based language server:
+
+	- "command": Executable program name in $PATH, or the absolute path of
+	  the executable used to start the language server.
+
+	- "args": Command line arguments of the command.
+
+	- "detached": Detach the language server when true.
+
+	- "shell": Use a shell for the server process. Default: `false`.
+
+Language server started with a Node module: ~
+
+	Additional fields for a language server started by a Node module:
+
+	- "module": Absolute filepath of the JavaScript file.
+
+	- "args": Extra arguments used when forking the JavaScript module.
+
+	- "runtime": Absolute path of the node runtime; coc.nvim's node
+	  runtime is used by default.
+
+	- "execArgv": ARGV passed to node on fork, normally used for
+	  debugging. Example: `["--nolazy", "--inspect-brk=6045"]`.
+
+	- "transport": Transport kind used by the server; can be 'ipc',
+	  'stdio', 'socket', or 'pipe'. 'ipc' is used by default
+	  (recommended).
+
+	- "transportPort": Port number used when the transport is 'socket'.
+
+Language server using an initialized socket server: ~
+
+	- "port": Port number of socket server.
+
+	- "host": Host of the socket server; defaults to `127.0.0.1`.
+
+
+==============================================================================
+
+MCP
+							*coc-config-mcp*
+
+Configurations of the built-in MCP (Model Context Protocol) socket server,
+which lets agents like Codex connect to the running coc.nvim instance through
+the `coc-mcp` stdio bridge.
+
+"mcp.autoStart"				*coc-config-mcp-autoStart*
+
+	Auto start the MCP socket server when coc.nvim starts. When enabled,
+	coc.nvim listens on a loopback socket and writes the connection info
+	(port and per-start token) to `~/.coc/mcp/coc-<pid>.json` (keyed by
+	the vim pid, so a coc.nvim restart rewrites the same file).
+
+	When disabled, the server can still be started manually with
+	`:CocCommand mcp.start`.
+	The server also restarts automatically after `:CocRestart` when it was
+	running before the restart.
+
+	Default: `false`
+
+"mcp.host"				*coc-config-mcp-host*
+
+	Host the MCP socket server binds to. Only loopback is supported.
+
+	Default: `"127.0.0.1"`
+
+"mcp.port"				*coc-config-mcp-port*
+
+	Port of the MCP socket server. `0` picks a random free port; the
+	active port is written to `~/.coc/mcp/coc-<pid>.json`.
+
+	Default: `0`
+
+"mcp.transport"				*coc-config-mcp-transport*
+
+	Socket transport of the MCP server: `"auto"` (default) uses a
+	per-process Unix socket under `~/.coc/mcp` on macOS/Linux and
+	loopback TCP on Windows, so no local TCP port is exposed where the
+	platform supports it; `"tcp"` forces loopback TCP; `"unix"` forces a
+	Unix socket.
+
+"mcp.authRequired"			*coc-config-mcp-authRequired*
+
+	Require the per-start random token (`coc/auth`) before an MCP
+	connection is accepted. Disable only for trusted local debugging.
+
+	Default: `true`
+
+"mcp.authClientPublicKey"		*coc-config-mcp-authClientPublicKey*
+
+	Optional PEM public key (SPKI) of the MCP client (the `coc-mcp`
+	bridge). When set, clients must prove possession of the matching
+	private key by signing a server-issued nonce (`coc/challenge`) in
+	place of the per-start token. This is required for the bridge's
+	`--connect` mode (SSH-forwarded ports), where the token-bearing
+	discovery file must not leave the remote host. Generate a keypair with
+	`node bin/coc-mcp.js --generate-key`, put the public key here and the
+	private key in the bridge's `COC_MCP_AUTH_KEY_FILE` environment
+	variable (a path to a PEM file). Empty (default) keeps the token-only
+	flow.
+
+"mcp.maxClients"			*coc-config-mcp-maxClients*
+
+	Maximum concurrent MCP client connections.
+
+	Default: `4`
+
+"mcp.frameMaxBytes"			*coc-config-mcp-frameMaxBytes*
+
+	Maximum size of a single MCP JSON-RPC frame in bytes.
+
+	Default: `16777216`
+
+"mcp.timeout"				*coc-config-mcp-timeout*
+
+	Timeout in milliseconds for MCP tool calls. `0` disables the timeout.
+
+	Default: `5000`
+
+"mcp.readTimeout"			*coc-config-mcp-readTimeout*
+
+	Timeout in milliseconds for read-only MCP tool calls (LSP queries such
+	as hover, references or workspace symbols), which are typically slower
+	than mutating operations. `0` disables the timeout. Agents cannot
+	override these timeouts.
+
+	Default: `15000`
+
+"mcp.idleTimeout"			*coc-config-mcp-idleTimeout*
+
+	Close MCP sessions idle for this many milliseconds. `0` disables the
+	idle timeout.
+
+	Default: `0`
+
+"mcp.maxRequestsPerSecond"		*coc-config-mcp-maxRequestsPerSecond*
+
+	Maximum number of JSON-RPC requests per second per MCP session.
+	`0` disables the rate limit.
+
+	Default: `60`
+
+"mcp.maxConcurrentRequests"		*coc-config-mcp-maxConcurrentRequests*
+
+	Maximum number of LSP requests MCP tools may send to a single
+	language server at the same time. Extra requests wait in a per-service
+	queue until a slot frees up, so several MCP clients cannot overwhelm
+	one language server. Different servers have different capacity; tune
+	per setup. `0` disables the limit; abandoned requests are still tracked
+	as stuck and new queries fail fast once 16 accumulate per server.
+
+	Default: `4`
+
+"mcp.languageServiceMap"		*coc-config-mcp-languageServiceMap*
+
+	Map of `languageId` to language server id. When a document's
+	languageId has an entry, LSP query tools (hover, definition,
+	references, document symbols, rename, ...) send the request directly
+	to that server instead of aggregating all matching providers. This
+	avoids waiting for the slowest of several attached language servers.
+	`lsp/code_actions` always aggregates all matching providers. Server
+	ids are shown by `:CocList services`. Leave empty (default) to keep
+	the aggregated provider behavior.
+
+	Default: `{}`
+
+"mcp.allowedPaths"			*coc-config-mcp-allowedPaths*
+
+	Glob patterns of paths the MCP server may access. When empty, only
+	workspace roots and documents opened in the editor are allowed (the
+	temporary directory stays readable for fallback reads). Denied paths
+	win over allowed paths.
+
+	Default: `[]`
+
+"mcp.deniedPaths"			*coc-config-mcp-deniedPaths*
+
+	Glob patterns of paths the MCP server must never access; applied
+	before `mcp.allowedPaths`.
+
+	Default: `[]`
+
+"mcp.allowedTools"			*coc-config-mcp-allowedTools*
+
+	Whitelist of MCP tool names exposed to agents. Only the tools listed
+	here are returned by `tools/list` and callable via `tools/call`;
+	everything else is hidden from clients. Default is empty, so no tools
+	are exposed until you add the names you want to enable.
+
+	Built-in tools:
+	- editor/state
+	- document/read, document/read_lines, document/apply_edits,
+	  document/write, document/format, document/open
+	- workspace/info, workspace/configuration, workspace/search,
+	  workspace/files, workspace/apply_edit, workspace/create_file,
+	  workspace/rename_file, workspace/delete_file
+	- lsp/hover, lsp/signature_help, lsp/definition, lsp/declaration,
+	  lsp/type_definition, lsp/implementation, lsp/references,
+	  lsp/document_symbols, lsp/workspace_symbols, lsp/diagnostics,
+	  lsp/code_actions, lsp/apply_code_action, lsp/rename,
+	  lsp/execute_command, lsp/request, lsp/capabilities, lsp/batch
+
+	Tools registered by extensions through `mcp.registerTool()` are
+	subject to the same whitelist.
+
+	Default: `[]`
+
+==============================================================================
+
+LSP FEATURES
+
+Configurations for features provided by language server.
+
+------------------------------------------------------------------------------
+
+CALLHIERARCHY
+							*coc-config-callHierarchy*
+
+"callHierarchy.enableTooltip"				*coc-config-callHierarchy-enableTooltip*
+
+	Enable a tooltip showing the relative filepath of a call hierarchy
+	item.
+
+	Scope: `application`, default: `true`
+
+"callHierarchy.openCommand"				*coc-config-callHierarchy-openCommand*
+
+	Open command for call hierarchy tree view.
+
+	Scope: `application`, default: `"edit"`
+
+"callHierarchy.splitCommand"				*coc-config-callHierarchy-splitCommand*
+
+	Window split command used by call hierarchy tree view.
+
+	Scope: `application`, default: `"botright 30vs"`
+
+------------------------------------------------------------------------------
+CODELENS
+							*coc-config-codeLens*
+
+"codeLens.enable"					*coc-config-codeLens-enable*
+
+	Enable the codeLens feature; requires Neovim with the virtual text
+	feature.
+
+	Scope: `language-overridable`, default: `false`
+
+"codeLens.display"					*coc-config-codeLens-display*
+
+	Display codeLens. Toggle with `:CocCommand document.toggleCodeLens`.
+
+	Scope: `language-overridable`, default: `true`
+
+"codeLens.position"					*coc-config-codeLens-position*
+
+	Display position of codeLens virtual text: `"top"`, `"eol"` or
+	`"right_align"`.
+
+	Scope: `language-overridable`, default: `"top"`
+
+"codeLens.separator"					*coc-config-codeLens-separator*
+
+	Separator text for codeLens in virtual text.
+
+	Scope: `language-overridable`, default: `""`
+
+"codeLens.subseparator"					*coc-config-codeLens-subseparator*
+
+	Subseparator between codeLenses in virtual text.
+
+	Scope: `language-overridable`, default: `" | "`
+
+------------------------------------------------------------------------------
+COLORS
+							*coc-config-colors*
+
+"colors.enable"						*coc-config-colors-enable*
+
+	Enable the colors highlight feature. For terminal Vim, the
+	'termguicolors' option should be enabled and the terminal should
+	support GUI colors.
+
+	Scope: `language-overridable`, default: `false`
+
+"colors.highlightPriority"				*coc-config-colors-highlightPriority*
+
+	Priority for colors highlights; works on Vim8 and Neovim >= 0.6.0.
+
+	Scope: `application`, default: `1000`
+
+------------------------------------------------------------------------------
+CURSORS
+							*coc-config-cursors*
+
+"cursors.cancelKey"					*coc-config-cursors-cancelKey*
+
+	Key used to cancel the cursors session.
+
+	Scope: `application`, default: `"<esc>"`
+
+"cursors.nextKey"					*coc-config-cursors-nextKey*
+
+	Key used to jump to the next cursors position.
+
+	Scope: `application`, default: `"<C-n>"`
+
+"cursors.previousKey"					*coc-config-cursors-previousKey*
+
+	Key used to jump to the previous cursors position.
+
+	Scope: `application`, default: `"<C-p>"`
+
+"cursors.wrapscan"					*coc-config-cursors-wrapscan*
+
+	Search wraps around the first or last cursors range.
+
+	Scope: `application`, default: `true`
+
+------------------------------------------------------------------------------
+DIAGNOSTIC
+							*coc-config-diagnostic*
+
+"diagnostic.autoRefresh"				*coc-config-diagnostic-autoRefresh*
+
+	Automatically refresh diagnostics; use the diagnosticRefresh action
+	when disabled.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.checkCurrentLine"				*coc-config-diagnostic-checkCurrentLine*
+
+	When enabled, show all diagnostics of the current line if there are none
+	at the current position.
+
+	Scope: `language-overridable`, default: `false`
+
+"diagnostic.displayByAle"				*coc-config-diagnostic-displayByAle*
+
+	Use Ale, coc-diagnostics-shim.nvim, or another provider to display
+	diagnostics in Vim. This setting disables diagnostic display using
+	coc's handler. A restart is required when changed.
+
+	Scope: `language-overridable`, default: `false`
+
+"diagnostic.displayByVimDiagnostic"			*coc-config-diagnostic-displayByVimDiagnostic*
+
+	Display diagnostics with nvim's `vim.diagnostic`, and prevent coc.nvim's
+	handler from displaying them in virtual text/floating windows, etc. A
+	restart is required when changed. Neovim only.
+
+	Scope: `language-overridable`, default: `false`
+
+"diagnostic.enable"					*coc-config-diagnostic-enable*
+
+	Set to false to disable diagnostic display.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.enableHighlightLineNumber"			*coc-config-diagnostic-enableHighlightLineNumber*
+
+	Enable highlighting line numbers for diagnostics; only works with
+	Neovim.
+
+	Scope: `application`, default: `true`
+
+"diagnostic.enableMessage"				*coc-config-diagnostic-enableMessage*
+
+	When to show messages of diagnostics.
+
+	Scope: `application`, default: `"always"`
+
+"diagnostic.enableSign"					*coc-config-diagnostic-enableSign*
+
+	Enable signs for diagnostics.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.errorSign"					*coc-config-diagnostic-errorSign*
+
+	Text of the error sign.
+
+	Scope: `application`, default: `">>"`
+
+"diagnostic.filetypeMap"				*coc-config-diagnostic-filetypeMap*
+
+	A map between the buffer filetype and the filetype assigned to
+	diagnostics. To syntax highlight diagnostics with their parent buffer
+	type, use `"default": "bufferType"`.
+
+	Scope: `application`, default: `{}`
+
+"diagnostic.floatConfig"				*coc-config-diagnostic-floatConfig*
+
+	Configure the float window style of diagnostic messages; see
+	|coc-config-float|.
+
+	Scope: `application`, default: `null`
+
+"diagnostic.format"					*coc-config-diagnostic-format*
+
+	Define the diagnostic format shown in the float window or echoed.
+	Available parts: source, code, severity, message.
+
+	Scope: `language-overridable`, default: `"%message (%source%code)"`
+
+"diagnostic.highlightLimit"				*coc-config-diagnostic-highlightLimit*
+
+	Limit the number of highlighted diagnostics; too many diagnostic
+	highlights could make Vim stop responding.
+
+	Scope: `language-overridable`, default: `1000`
+
+"diagnostic.highlightPriority"				*coc-config-diagnostic-highlightPriority*
+
+	Priority for diagnostic highlights; works on Vim8 and Neovim >= 0.6.0.
+
+	Scope: `language-overridable`, default: `4096`
+
+"diagnostic.hintSign"					*coc-config-diagnostic-hintSign*
+
+	Text of the hint sign.
+
+	Scope: `application`, default: `">>"`
+
+"diagnostic.infoSign"					*coc-config-diagnostic-infoSign*
+
+	Text of the info sign.
+
+	Scope: `application`, default: `">>"`
+
+"diagnostic.level"					*coc-config-diagnostic-level*
+
+	Used for filtering diagnostics by severity.
+
+	Scope: `resource`, default: `"hint"`
+
+"diagnostic.locationlistLevel"				*coc-config-diagnostic-locationlistLevel*
+
+	Filter diagnostics in the location list.
+
+	Scope: `language-overridable`, default: `null`
+
+"diagnostic.locationlistUpdate"				*coc-config-diagnostic-locationlistUpdate*
+
+	Update the location list on diagnostics change; only works with the
+	location list opened by the :CocDiagnostics command and the first
+	window of the associated buffer.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.messageDelay"				*coc-config-diagnostic-messageDelay*
+
+	How long to wait (in milliseconds) before displaying the diagnostic
+	message with echo or float.
+
+	Scope: `application`, default: `200`
+
+"diagnostic.messageLevel"				*coc-config-diagnostic-messageLevel*
+
+	Filter diagnostic messages in the float window/popup.
+
+	Scope: `language-overridable`, default: `null`
+
+"diagnostic.messageTarget"				*coc-config-diagnostic-messageTarget*
+
+	Diagnostic message target.
+
+	Scope: `language-overridable`, default: `"float"`
+
+"diagnostic.refreshOnInsertMode"			*coc-config-diagnostic-refreshOnInsertMode*
+
+	Enable diagnostic refresh in insert mode. Default: false.
+
+	Scope: `language-overridable`, default: `false`
+
+"diagnostic.showDeprecated"				*coc-config-diagnostic-showDeprecated*
+
+	Show diagnostics with the deprecated tag.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.showUnused"					*coc-config-diagnostic-showUnused*
+
+	Show diagnostics with the unused tag; affects highlight, sign, virtual
+	text, and message.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.signLevel"					*coc-config-diagnostic-signLevel*
+
+	Filter diagnostics displayed in the sign column.
+
+	Scope: `language-overridable`, default: `null`
+
+"diagnostic.signPriority"				*coc-config-diagnostic-signPriority*
+
+	Priority of diagnostic signs; defaults to 10.
+
+	Scope: `resource`, default: `10`
+
+"diagnostic.virtualText"				*coc-config-diagnostic-virtualText*
+
+	Use virtual text to display diagnostics.
+
+	Scope: `language-overridable`, default: `false`
+
+"diagnostic.virtualTextAlign"				*coc-config-diagnostic-virtualTextAlign*
+
+	Position of the virtual text; defaults to 'after'.
+
+	Scope: `language-overridable`, default: `"after"`
+
+"diagnostic.virtualTextCurrentLineOnly"			*coc-config-diagnostic-virtualTextCurrentLineOnly*
+
+	Only show virtual text diagnostics on the current cursor line.
+
+	Scope: `language-overridable`, default: `true`
+
+"diagnostic.virtualTextFormat"				*coc-config-diagnostic-virtualTextFormat*
+
+	Define the virtual text diagnostic format. Available parts: source,
+	code, severity, message.
+
+	Scope: `language-overridable`, default: `"%message"`
+
+"diagnostic.virtualTextLevel"				*coc-config-diagnostic-virtualTextLevel*
+
+	Filter diagnostic messages in virtual text by level.
+
+	Scope: `language-overridable`, default: `null`
+
+"diagnostic.virtualTextLimitInOneLine"			*coc-config-diagnostic-virtualTextLimitInOneLine*
+
+	Maximum number of diagnostic messages to display in one line.
+
+	Scope: `language-overridable`, default: `999`
+
+"diagnostic.virtualTextLineSeparator"			*coc-config-diagnostic-virtualTextLineSeparator*
+
+	The text that marks the end of a line in the diagnostic message.
+
+	Scope: `language-overridable`, default: `" \ "`
+
+"diagnostic.virtualTextLines"				*coc-config-diagnostic-virtualTextLines*
+
+	The number of non-empty lines of a diagnostic to display.
+
+	Scope: `language-overridable`, default: `3`
+
+"diagnostic.virtualTextPrefix"				*coc-config-diagnostic-virtualTextPrefix*
+
+	The prefix added to virtual text diagnostics.
+
+	Scope: `language-overridable`, default: `" "`
+
+"diagnostic.virtualTextWinCol"				*coc-config-diagnostic-virtualTextWinCol*
+
+	Window column number to align virtual text; Neovim only.
+
+	Scope: `language-overridable`, default: `null`
+
+"diagnostic.warningSign"				*coc-config-diagnostic-warningSign*
+
+	Text of the warning sign.
+
+	Scope: `application`, default: `"⚠"`
+
+"diagnostic.showRelatedInformation"				*coc-config-diagnostic-showRelatedInformation*
+
+	Display related information in the diagnostic floating window.
+
+	Scope: `language-overridable`, default: `true`
+
+------------------------------------------------------------------------------
+DOCUMENTHIGHLIGHT
+							*coc-config-documentHighlight*
+
+"documentHighlight.priority"				*coc-config-documentHighlight-priority*
+
+	Match priority used by document highlight; see ':h matchadd'.
+
+	Scope: `resource`, default: `-1`
+
+"documentHighlight.limit"				*coc-config-documentHighlight-limit*
+
+	Limit the highlights added by matchaddpos; too many positions could
+	make Vim slow.
+
+	Scope: `resource`, default: `200`
+
+"documentHighlight.timeout"				*coc-config-documentHighlight-timeout*
+
+	Timeout for document highlight, in milliseconds.
+
+	Scope: `resource`, default: `300`
+
+------------------------------------------------------------------------------
+HOVER
+							*coc-config-hover*
+
+"hover.autoHide"					*coc-config-hover-autoHide*
+
+	Automatically hide the hover float window on CursorMove or InsertEnter.
+
+	Scope: `application`, default: `true`
+
+"hover.floatConfig"					*coc-config-hover-floatConfig*
+
+	Configure the float window style of hover documents; see
+	|coc-config-float|.
+
+	Scope: `application`, default: `null`
+
+"hover.previewMaxHeight"				*coc-config-hover-previewMaxHeight*
+
+	Maximum height of the preview window for hover.
+
+	Scope: `resource`, default: `12`
+
+"hover.target"						*coc-config-hover-target*
+
+	Target used to show hover information; can be `float`, `echo`, or
+	`preview`.
+
+	Scope: `resource`, default: `float`
+
+------------------------------------------------------------------------------
+INLAYHINT
+							*coc-config-inlayHint*
+
+"inlayHint.enable"					*coc-config-inlayHint-enable*
+
+	Enable inlay hint support.
+
+	Scope: `language-overridable`, default: `true`
+
+"inlayHint.enableParameter"				*coc-config-inlayHint-enableParameter*
+
+	Enable inlay hints for parameters.
+
+	Scope: `language-overridable`, default: `true`
+
+"inlayHint.display"					*coc-config-inlayHint-display*
+
+	Display inlay hints. Toggle with :CocCommand document.toggleInlayHint
+
+	Scope: `language-overridable`, default: `true`
+
+"inlayHint.refreshOnInsertMode"				*coc-config-inlayHint-refreshOnInsertMode*
+
+	Refresh inlay hints in insert mode.
+
+	Scope: `language-overridable`, default: `false`
+
+"inlayHint.position"					*coc-config-inlayHint-position*
+
+	Controls the position of inlay hints; supports `inline` and `eol`.
+
+	Scope: `language-overridable`, default: `inline`
+
+"inlayHint.maximumLength"				*coc-config-inlayHint-maximumLength*
+
+	Maximum overall length of inlay hints on a single line before they are
+	truncated by the editor. Set to `0` to disable truncation.
+
+	Scope: `language-overridable`, default: `0`
+
+------------------------------------------------------------------------------
+LINK
+							*coc-config-links*
+
+"links.enable" 						*coc-config-links-enable*
+
+	Enable document links.
+
+	Scope: `language-overridable`, default: `true`
+
+"links.highlight"					*coc-config-links-highlight*
+
+	Use the CocLink highlight group to highlight links.
+
+	Scope: `application`, default: `false`
+
+"links.tooltip"						*coc-config-links-tooltip*
+
+	Show tooltip of link under cursor on CursorHold.
+
+	Scope: `application`, default: `false`
+
+------------------------------------------------------------------------------
+LIST
+							*coc-config-list*
+
+"list.alignColumns"					*coc-config-list-alignColumns*
+
+	Whether to align lists in columns. Default: `false`.
+
+	Scope: `application`, default: `false`
+
+"list.extendedSearchMode"				*coc-config-list-extendedSearchMode*
+
+	Enable extended search mode which allows multiple search patterns
+	delimited by spaces.
+
+	Scope: `application`, default: `true`
+
+"list.floatPreview" 					*coc-config-list-floatPreview*
+
+	Enable preview with a float window/popup. Default: `false`.
+
+	Scope: `application`, default: `false`
+
+"list.height"						*coc-config-list-height*
+
+	Height of the split list window.
+
+	Scope: `application`, default: `10`
+
+"list.indicator"					*coc-config-list-indicator*
+
+	The character used as the first character in the prompt line.
+
+	Scope: `application`, default: `">"`
+
+"list.insertMappings"					*coc-config-list-insertMappings*
+
+	Custom key-mappings in insert mode.
+
+	Scope: `application`, default: `{}`
+
+"list.interactiveDebounceTime"				*coc-config-list-interactiveDebounceTime*
+
+	Debounce time for input changes in interactive mode.
+
+	Scope: `application`, default: `100`
+
+"list.limitLines"					*coc-config-list-limitLines*
+
+	Limit lines for the list buffer.
+
+	Scope: `application`, default: `null`
+
+"list.maxPreviewHeight"					*coc-config-list-maxPreviewHeight*
+
+	Maximum height of the preview window of a list.
+
+	Scope: `application`, default: `12`
+
+"list.menuAction"					*coc-config-list-menuAction*
+
+	Use a menu picker instead of confirm() for choosing an action.
+
+	Scope: `application`, default: `false`
+
+"list.nextKeymap"					*coc-config-list-nextKeymap*
+
+	Key used to select the next line in insert mode.
+
+	Scope: `application`, default: `"<C-j>"`
+
+"list.normalMappings"					*coc-config-list-normalMappings*
+
+	Custom key-mappings in normal mode.
+
+	Scope: `application`, default: `{}`
+
+"list.previewHighlightGroup"				*coc-config-list-previewHighlightGroup*
+
+	Highlight group used to highlight the range in the preview window.
+
+	Scope: `application`, default: `"Search"`
+
+"list.previewSplitRight"				*coc-config-list-previewSplitRight*
+
+	Use vsplit for the preview window.
+
+	Scope: `application`, default: `false`
+
+"list.previewToplineOffset"				*coc-config-list-previewToplineOffset*
+
+	Topline offset for list previews.
+
+	Scope: `application`, default: `3`
+
+"list.previewToplineStyle"				*coc-config-list-previewToplineStyle*
+
+	Topline style for list previews; can be "offset" or "middle".
+
+	Scope: `application`, default: `"offset"`
+
+"list.previousKeymap"					*coc-config-list-previousKeymap*
+
+	Key used to select the previous line in insert mode.
+
+	Scope: `application`, default: `"<C-k>"`
+
+"list.selectedSignText"					*coc-config-list-selectedSignText*
+
+	Sign text for selected lines.
+
+	Scope: `application`, default: `"*"`
+
+"list.signOffset"					*coc-config-list-signOffset*
+
+	Sign offset of the list; should be different from other plugins.
+
+	Scope: `application`, default: `900`
+
+"list.smartCase"					*coc-config-list-smartCase*
+
+	Use smartcase matching for fuzzy and strict matching; `--ignore-case`
+	is ignored, and this may not affect interactive lists.
+
+	Scope: `application`, default: `false`
+
+"list.source.diagnostics.includeCode"			*coc-config-list-source-diagnostics-includeCode*
+
+	Whether to show the diagnostic code in the list.
+
+	Scope: `application`, default: `true`
+
+"list.source.diagnostics.pathFormat"			*coc-config-list-source-diagnostics-pathFormat*
+
+	Determines how the filepath is shown in the list.
+
+	Scope: `application`, default: `"full"`
+
+"list.source.outline.ctagsFiletypes"			*coc-config-list-source-outline-ctagsFiletypes*
+
+	Filetypes that should use ctags for the outline instead of the language
+	server.
+
+	Scope: `application`, default: `[]`
+
+"list.source.symbols.excludes"				*coc-config-list-source-symbols-excludes*
+
+	Minimatch patterns for filepaths to exclude from the symbols list.
+
+	Scope: `application`, default: `[]`
+
+"list.statusLineSegments"				*coc-config-list-statusLineSegments*
+
+	An array of statusline segments used to draw the status line for list
+	windows.
+
+	Scope: `application`.
+
+------------------------------------------------------------------------------
+NOTIFICATION
+							*coc-config-notification*
+
+"notification.border"					*coc-config-notification-border*
+
+	Enable a rounded border for notification windows.
+
+	Scope: `application`, default: `true`
+
+"notification.disabledProgressSources"			*coc-config-notification-disabledProgressSources*
+
+	Sources for which message progress should be disabled; use * to disable
+	all message-only progress.
+
+	Scope: `application`, default: `[]`
+
+"notification.focusable"				*coc-config-notification-focusable*
+
+	Enable focusing by user actions (wincmds, mouse events); Neovim only.
+
+	Scope: `application`, default: `true`
+
+"notification.highlightGroup"				*coc-config-notification-highlightGroup*
+
+	Highlight group of the notification dialog.
+
+	Scope: `application`, default: `"Normal"`
+
+"notification.marginRight"				*coc-config-notification-marginRight*
+
+	Margin to the right of the editor window.
+
+	Scope: `application`, default: `10`
+
+"notification.maxHeight"				*coc-config-notification-maxHeight*
+
+	Maximum content height of the notification dialog.
+
+	Scope: `application`, default: `10`
+
+"notification.maxWidth"					*coc-config-notification-maxWidth*
+
+	Maximum content width of the notification dialog.
+
+	Scope: `application`, default: `60`
+
+"notification.minProgressWidth"				*coc-config-notification-minProgressWidth*
+
+	Minimal width of progress notifications.
+
+	Scope: `application`, default: `30`
+
+"notification.statusLineProgress"			*coc-config-notification-statusLineProgress*
+
+	Show progress notifications in the status line instead of a float
+	window/popup.
+
+	Scope: `application`, default: `true`
+
+"notification.timeout"					*coc-config-notification-timeout*
+
+	Timeout for auto-closing notifications, in milliseconds.
+
+	Scope: `application`, default: `10000`
+
+"notification.winblend"					*coc-config-notification-winblend*
+
+	Winblend option of the notification window; Neovim only.
+
+	Scope: `application`, default: `30`
+
+------------------------------------------------------------------------------
+OUTLINE
+							*coc-config-outline*
+
+"outline.autoPreview"					*coc-config-outline-autoPreview*
+
+	Enable auto preview on cursor move.
+
+	Scope: `application`, default: `false`
+
+"outline.autoHide"					*coc-config-outline-autoHide*
+
+	Automatically hide the outline window when an item is clicked.
+
+	Scope: `application`, default: `false`
+
+"outline.autoWidth"					*coc-config-outline-autoWidth*
+
+	Automatically increase window width to avoid wrapped lines.
+
+	Scope: `application`, default: `true`
+
+"outline.checkBufferSwitch"				*coc-config-outline-checkBufferSwitch*
+
+	Recreate the outline view after the user switches to another buffer in
+	the current tab.
+
+	Scope: `application`, default: `true`
+
+"outline.codeActionKinds"				*coc-config-outline-codeActionKinds*
+
+	Filter code actions in the actions menu by kind.
+
+	Scope: `application`, default: `["","quickfix","refactor"]`
+
+"outline.detailAsDescription"				*coc-config-outline-detailAsDescription*
+
+	Show detail as a description next to the label; when false, the detail
+	is shown in a tooltip on cursor hold.
+
+	Scope: `application`, default: `true`
+
+"outline.expandLevel"					*coc-config-outline-expandLevel*
+
+	Expansion level of tree nodes.
+
+	Scope: `application`, default: `1`
+
+"outline.followCursor"					*coc-config-outline-followCursor*
+
+	Reveal the item in the outline tree on cursor hold.
+
+	Scope: `application`, default: `true`
+
+"outline.keepWindow"					*coc-config-outline-keepWindow*
+
+	Jump back to the original window after the outline is shown.
+
+	Scope: `application`, default: `false`
+
+"outline.previewBorder"					*coc-config-outline-previewBorder*
+
+	Use a border for the preview window.
+
+	Scope: `application`, default: `true`
+
+"outline.previewBorderHighlightGroup"			*coc-config-outline-previewBorderHighlightGroup*
+
+	Border highlight group of the preview window.
+
+	Scope: `application`, default: `"Normal"`
+
+"outline.previewBorderRounded"				*coc-config-outline-previewBorderRounded*
+
+	Use a rounded border for the preview window.
+
+	Scope: `application`, default: `false`
+
+"outline.previewHighlightGroup"				*coc-config-outline-previewHighlightGroup*
+
+	Highlight group of the preview window.
+
+	Scope: `application`, default: `"Normal"`
+
+"outline.previewMaxWidth"				*coc-config-outline-previewMaxWidth*
+
+	Maximum width of the preview window.
+
+	Scope: `application`, default: `80`
+
+"outline.previewWinblend"				*coc-config-outline-previewWinblend*
+
+	Enable pseudo-transparency by setting the 'winblend' option of the
+	window; Neovim only.
+
+	Scope: `application`, default: `0`
+
+"outline.showLineNumber"				*coc-config-outline-showLineNumber*
+
+	Show the line number of symbols.
+
+	Scope: `application`, default: `true`
+
+"outline.sortBy"					*coc-config-outline-sortBy*
+
+	Sort method for the symbols outline.
+
+	Scope: `application`, default: `"category"`
+
+"outline.splitCommand"					*coc-config-outline-splitCommand*
+
+	Window split command used by the outline.
+
+	Scope: `application`, default: `"botright 30vs"`
+
+"outline.switchSortKey"					*coc-config-outline-switchSortKey*
+
+	Key used to switch the sort method for the symbols provider of the current
+	tree view.
+
+	Scope: `application`, default: `"<C-s>"`
+
+"outline.togglePreviewKey"				*coc-config-outline-togglePreviewKey*
+
+	Key used to toggle the auto preview feature.
+
+	Scope: `application`, default: `"p"`
+
+------------------------------------------------------------------------------
+PULLDIAGNOSTIC
+							*coc-config-pullDiagnostic*
+
+"pullDiagnostic.ignored"				*coc-config-pullDiagnostic-ignored*
+
+	Minimatch patterns to match full filepaths that should be ignored for
+	pullDiagnostic.
+
+	Scope: `application`, default: `[]`
+
+"pullDiagnostic.onChange"				*coc-config-pullDiagnostic-onChange*
+
+	Whether to pull for diagnostics on document change.
+
+	Scope: `language-overridable`, default: `true`
+
+"pullDiagnostic.onSave"					*coc-config-pullDiagnostic-onSave*
+
+	Whether to pull for diagnostics on document save.
+
+	Scope: `language-overridable`, default: `false`
+
+"pullDiagnostic.workspace"				*coc-config-pullDiagnostic-workspace*
+
+	Whether to pull for workspace diagnostics when possible.
+
+	Scope: `application`, default: `true`
+
+------------------------------------------------------------------------------
+REFACTOR
+							*coc-config-refactor*
+
+"refactor.afterContext"					*coc-config-refactor-afterContext*
+
+	Print `num` lines of trailing context after each match.
+
+	Scope: `application`, default: `3`
+
+"refactor.beforeContext"				*coc-config-refactor-beforeContext*
+
+	Print `num` lines of leading context before each match.
+
+	Scope: `application`, default: `3`
+
+"refactor.openCommand"					*coc-config-refactor-openCommand*
+
+	Open command for the refactor window.
+
+	Scope: `application`, default: `"vsplit"`
+
+"refactor.saveToFile"					*coc-config-refactor-saveToFile*
+
+	Save the changed buffer to file when writing the refactor buffer with
+	the ':noa wa' command.
+
+	Scope: `application`, default: `true`
+
+"refactor.showMenu"					*coc-config-refactor-showMenu*
+
+	Refactor buffer local mapping to bring up a menu for the current chunk.
+
+	Scope: `application`, default: `"<Tab>"`
+
+------------------------------------------------------------------------------
+SEMANTICTOKENS
+							*coc-config-semanticTokens*
+
+"semanticTokens.combinedModifiers"			*coc-config-semanticTokens-combinedModifiers*
+
+	Semantic token modifiers whose highlights should be combined with
+	syntax highlights.
+
+	Scope: `language-overridable`, default: `["deprecated"]`
+
+"semanticTokens.enable"					*coc-config-semanticTokens-enable*
+
+	Enable semantic tokens support.
+
+	Scope: `language-overridable`, default: `false`
+
+"semanticTokens.highlightPriority"			*coc-config-semanticTokens-highlightPriority*
+
+	Priority for semantic tokens highlights.
+
+	Scope: `language-overridable`, default: `2048`
+
+"semanticTokens.incrementTypes"				*coc-config-semanticTokens-incrementTypes*
+
+	Semantic token types that should increase highlight when inserting at
+	the start and end positions of a token.
+
+	Scope: `language-overridable`, default: `["variable","string","parameter"]`
+
+------------------------------------------------------------------------------
+SIGNATURE
+							*coc-config-signature*
+
+"signature.enable"					*coc-config-signature-enable*
+
+	Show signature help when a trigger character is typed.
+
+	Scope: `language-overridable`, default: `true`
+
+"signature.floatConfig"					*coc-config-signature-floatConfig*
+
+	Configure the float window style of signature documents; see
+	|coc-config-float|.
+
+	Scope: `application`, default: `null`
+
+"signature.hideOnTextChange"				*coc-config-signature-hideOnTextChange*
+
+	Hide the signature float window when text changes in insert mode.
+
+	Scope: `language-overridable`, default: `false`
+
+"signature.preferShownAbove"				*coc-config-signature-preferShownAbove*
+
+	Show the signature help float window above the cursor when possible;
+	requires restarting the service when changed.
+
+	Scope: `application`, default: `true`
+
+"signature.target"					*coc-config-signature-target*
+
+	Target used to show signature help; uses float when possible by
+	default.
+
+	Scope: `language-overridable`, default: `"float"`
+
+"signature.triggerSignatureWait"			*coc-config-signature-triggerSignatureWait*
+
+	Timeout for triggering signature help, in milliseconds.
+
+	Scope: `language-overridable`, default: `500`
+
+------------------------------------------------------------------------------
+SNIPPET
+							*coc-config-snippet*
+
+"snippet.highlight"					*coc-config-snippet-highlight*
+
+	Use the 'CocSnippetVisual' highlight group to highlight placeholders
+	with the same index as the current one.
+
+	Scope: `application`, default: `false`
+
+"snippet.nextPlaceholderOnDelete"			*coc-config-snippet-nextPlaceholderOnDelete*
+
+	Automatically jump to the next placeholder when the current one is
+	completely deleted.
+
+	Scope: `application`, default: `false`
+
+"snippet.statusText"					*coc-config-snippet-statusText*
+
+	Text shown in the statusline to indicate that a snippet session is
+	activated.
+
+	Scope: `application`, default: `"SNIP"`
+
+------------------------------------------------------------------------------
+SOURCES							*coc-config-sources*
+
+Configurations of builtin completion sources.
+
+"coc.source.around.enable"				*coc-config-coc-source-around-enable*
+
+	Enable the around source, which completes words around the cursor.
+
+	Scope: `application`, default: `true`
+
+"coc.source.around.priority"				*coc-config-coc-source-around-priority*
+
+	Priority of the around source; higher priority ranks its items first.
+
+	Scope: `application`, default: `1`
+
+"coc.source.around.shortcut"				*coc-config-coc-source-around-shortcut*
+
+	Shortcut text shown in the completion menu.
+
+	Scope: `application`, default: `"A"`
+
+"coc.source.around.disableSyntaxes"			*coc-config-coc-source-around-disableSyntaxes*
+
+	Disable the around source when the syntax name of the completion
+	context matches any of these names.
+
+	Scope: `application`, default: `[]`
+
+"coc.source.buffer.enable"				*coc-config-coc-source-buffer-enable*
+
+	Enable the buffer source, which completes words from all buffers.
+
+	Scope: `application`, default: `true`
+
+"coc.source.buffer.priority"				*coc-config-coc-source-buffer-priority*
+
+	Priority of the buffer source; higher priority ranks its items first.
+
+	Scope: `application`, default: `1`
+
+"coc.source.buffer.shortcut"				*coc-config-coc-source-buffer-shortcut*
+
+	Shortcut text shown in the completion menu.
+
+	Scope: `application`, default: `"B"`
+
+"coc.source.buffer.disableSyntaxes"			*coc-config-coc-source-buffer-disableSyntaxes*
+
+	Disable the buffer source when the syntax name of the completion
+	context matches any of these names.
+
+	Scope: `application`, default: `[]`
+
+"coc.source.buffer.ignoreGitignore"			*coc-config-coc-source-buffer-ignoreGitignore*
+
+	Ignore git-ignored files for buffer words.
+
+	Scope: `application`, default: `true`
+
+"coc.source.file.enable"				*coc-config-coc-source-file-enable*
+
+	Enable the file source, which completes file paths.
+
+	Scope: `application`, default: `true`
+
+"coc.source.file.priority"				*coc-config-coc-source-file-priority*
+
+	Priority of the file source; higher priority ranks its items first.
+
+	Scope: `application`, default: `10`
+
+"coc.source.file.shortcut"				*coc-config-coc-source-file-shortcut*
+
+	Shortcut text shown in the completion menu.
+
+	Scope: `application`, default: `"F"`
+
+"coc.source.file.triggerCharacters"			*coc-config-coc-source-file-triggerCharacters*
+
+	Characters that trigger file path completion.
+
+	Scope: `application`, default: `["/", "\\"]`
+
+"coc.source.file.disableSyntaxes"			*coc-config-coc-source-file-disableSyntaxes*
+
+	Disable the file source when the syntax name of the completion
+	context matches any of these names.
+
+	Scope: `application`, default: `[]`
+
+"coc.source.file.ignoreHidden"				*coc-config-coc-source-file-ignoreHidden*
+
+	Ignore completion for hidden files.
+
+	Scope: `application`, default: `true`
+
+"coc.source.file.ignorePatterns"			*coc-config-coc-source-file-ignorePatterns*
+
+	Ignore patterns of the matcher.
+
+	Scope: `application`, default: `[]`
+
+"coc.source.file.trimSameExts"				*coc-config-coc-source-file-trimSameExts*
+
+	Trim the same extension on file completion.
+
+	Scope: `application`, default: `[".ts",".js"]`
+
+------------------------------------------------------------------------------
+SUGGEST
+							*coc-config-suggest*
+
+"suggest.acceptSuggestionOnCommitCharacter"		*coc-config-suggest-acceptSuggestionOnCommitCharacter*
+
+	Controls whether suggestions should be accepted on commit characters. For
+	example, in JavaScript, the semicolon (`;`) can be a commit character that
+	accepts a suggestion and types that character.
+
+	Scope: `language-overridable`, default: `false`
+
+"suggest.asciiCharactersOnly"				*coc-config-suggest-asciiCharactersOnly*
+
+	Trigger suggest with ASCII characters only.
+
+	Scope: `language-overridable`, default: `false`
+
+"suggest.segmenterLocales" 				*coc-config-suggest-segmenterLocales*
+
+	Locales used to divide sentences into segments for the around and buffer
+	sources; works when NodeJS is built with Intl support. See
+	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter/Segmenter#parameters.
+	An empty string (the default) means auto-detect; use null to disable this
+	feature.
+
+	Scope: `language-overridable`, default: `""`
+
+"suggest.asciiMatch"					*coc-config-suggest-asciiMatch*
+
+	Convert Unicode characters to ASCII for matching.
+
+	Scope: `language-overridable`, default: `true`
+
+"suggest.autoTrigger"					*coc-config-suggest-autoTrigger*
+
+	How completion should be triggered; can be `"always"`, `"trigger"`,
+	or `"none"`.
+
+	Scope: `language-overridable`, default: `"always"`
+
+"suggest.completionItemKindLabels"			*coc-config-suggest-completionItemKindLabels*
+
+	Set custom labels for completion item kinds.
+	Default value: >
+	{
+	  "text": "v",
+	  "method": "f",
+	  "function": "f",
+	  "constructor": "f",
+	  "field": "m",
+	  "variable": "v",
+	  "class": "C",
+	  "interface": "I",
+	  "module": "M",
+	  "property": "m",
+	  "unit": "U",
+	  "value": "v",
+	  "enum": "E",
+	  "keyword": "k",
+	  "snippet": "S",
+	  "color": "v",
+	  "file": "F",
+	  "reference": "r",
+	  "folder": "F",
+	  "enumMember": "m",
+	  "constant": "v",
+	  "struct": "S",
+	  "event": "E",
+	  "operator": "O",
+	  "typeParameter": "T",
+	  "default": ""
+	}
+<
+	Scope: `application`
+
+"suggest.defaultSortMethod"				*coc-config-suggest-defaultSortMethod*
+
+	Default sorting behavior when the trigger is empty; can be `"length"`,
+	`"alphabetical"`, or `"none"`.
+
+	Scope: `language-overridable`, default: `"length"`
+
+"suggest.detailField"					*coc-config-suggest-detailField*
+
+	Where to show the detail text of the completion item from the language
+	server.
+
+	Scope: `application`, default: `"preview"`
+
+"suggest.enableFloat" 					*coc-config-suggest-enableFloat*
+
+	Enable a float window with documentation next to the popup menu.
+
+	Scope: `language-overridable`, default: `true`
+
+"suggest.enablePreselect"				*coc-config-suggest-enablePreselect*
+
+	Enable the LSP preselect feature; works when `suggest.noselect` is false.
+
+	Scope: `application`, default: `true`
+
+"suggest.filterGraceful" 				*coc-config-suggest-filterGraceful*
+
+	Controls whether filtering and sorting suggestions accounts for small
+	typos.
+
+	Scope: `language-overridable`, default: `true`
+
+"suggest.filterOnBackspace" 				*coc-config-suggest-filterOnBackspace*
+
+	Filter completion items on backspace.
+
+	Scope: `application`, default: `true`
+
+"suggest.floatConfig"					*coc-config-suggest-floatConfig*
+
+	Configure the style of the popup menu and documentation window for
+	completion.
+
+	Note: some properties don't work, including "focusable", "close", and
+	"maxHeight" (use the 'pumheight' option for the maximum height of the
+	popup menu).
+
+	Note: "maxWidth" doesn't work for the popup menu; use
+	|coc-config-suggest-labelMaxLength| instead.
+
+"suggest.formatItems"					*coc-config-suggest-formatItems*
+
+	Items shown in the popup menu, in order.
+
+	Scope: `application`, default: `["abbr","menu","kind","shortcut"]`
+
+"suggest.highPrioritySourceLimit"			*coc-config-suggest-highPrioritySourceLimit*
+
+	Maximum number of items for sources with priority greater than or
+	equal to 90.
+
+	Scope: `language-overridable`, default: `null`
+
+"suggest.insertMode" 					*coc-config-suggest-insertMode*
+
+	Controls whether words are overwritten when accepting completions. Use
+	`insert` to only replace the typed prefix before the cursor and keep text
+	after the cursor. Use `replace` to also replace matching text after the
+	cursor.
+
+	Scope: `language-overridable`, default: `"replace"`
+
+"suggest.ignoreRegexps"					*coc-config-suggest-ignoreRegexps*
+
+	Regexps to ignore when triggering suggest.
+
+	Scope: `language-overridable`, default: `[]`
+
+"suggest.invalidInsertCharacters"			*coc-config-suggest-invalidInsertCharacters*
+
+	Invalid characters used to strip the valid word when inserting the
+	text of a completion item.
+
+	Scope: `application`, default: `["\r","\n"]`
+
+"suggest.labelMaxLength"				*coc-config-suggest-labelMaxLength*
+
+	Maximum length of the abbr shown as the label of a completion item.
+
+	Scope: `application`, default: `200`
+
+"suggest.languageSourcePriority"			*coc-config-suggest-languageSourcePriority*
+
+	Priority of language sources.
+
+	Scope: `language-overridable`, default: `99`
+
+"suggest.localityBonus"					*coc-config-suggest-localityBonus*
+
+	Controls whether sorting favors words that appear close to the cursor.
+
+	Scope: `language-overridable`, default: `true`
+
+"suggest.lowPrioritySourceLimit"			*coc-config-suggest-lowPrioritySourceLimit*
+
+	Maximum number of items for sources with priority lower than 90.
+
+	Scope: `language-overridable`, default: `null`
+
+"suggest.maxCompleteItemCount"				*coc-config-suggest-maxCompleteItemCount*
+
+	Maximum number of completion items shown in Vim.
+
+	Scope: `language-overridable`, default: `256`
+
+"suggest.minTriggerInputLength"				*coc-config-suggest-minTriggerInputLength*
+
+	Minimum input length for triggering completion. Default: 1.
+
+	Scope: `language-overridable`, default: `1`
+
+"suggest.noselect"					*coc-config-suggest-noselect*
+
+	Don't make Vim select the first item when the popup menu is shown.
+
+	Scope: `application`, default: `false`
+
+"suggest.preferCompleteThanJumpPlaceholder"		*coc-config-suggest-preferCompleteThanJumpPlaceholder*
+
+	Confirm completion instead of jumping to the next placeholder when
+	completion is activated.
+
+	Scope: `resource`, default: `false`
+
+"suggest.pumAlign"					*coc-config-suggest-pumAlign*
+
+	Field of the popup menu to align with the cursor. When `null` (default),
+	the leftmost character of the popup menu is aligned with the cursor. Set
+	to `"abbr"`, `"menu"`, `"kind"` or `"shortcut"` to shift the popup menu to
+	the left so the configured field is aligned with the cursor.
+
+	Scope: `application`, default: `null`
+
+"suggest.pumFloatConfig"				*coc-config-suggest-pumFloatConfig*
+
+	Configure the style of the popup menu; `suggest.floatConfig` is used when
+	not specified.
+
+	Available properties: "border", "rounded", "highlight",
+	"borderhighlight", "winblend", "title" and "shadow".
+
+	Note: the 'winblend' option is used for the custom popup menu when not
+	configured (Neovim only). Use 'pumwidth' for the minimal width of the
+	popup menu and 'pumheight' for its maximum height.
+
+	Scope: `application`, default: `null`
+
+"suggest.removeDuplicateItems"				*coc-config-suggest-removeDuplicateItems*
+
+	Remove completion items with a duplicated word across all sources;
+	snippet items are excluded.
+
+	Scope: `language-overridable`, default: `false`
+
+"suggest.removeCurrentWord"				*coc-config-suggest-removeCurrentWord*
+
+	Remove the word item (from the around and buffer sources) that is
+	identical to the current input.
+
+	Scope: `language-overridable`, default: `false`
+
+"suggest.reTriggerAfterIndent"				*coc-config-suggest-reTriggerAfterIndent*
+
+	Re-trigger completion after indent changes.
+
+	Scope: `application`, default: `true`
+
+"suggest.reversePumAboveCursor"				*coc-config-suggest-reversePumAboveCursor*
+
+	Reverse the order of completion items when the popup menu is shown
+	above the cursor.
+
+	Scope: `application`, default: `false`
+
+"suggest.selection"					*coc-config-suggest-selection*
+
+	Controls how suggestions are pre-selected when showing the suggest list.
+
+	Scope: `application`, default: `"first"`
+
+"suggest.snippetIndicator"				*coc-config-suggest-snippetIndicator*
+
+	The character used in the abbr of a completion item to indicate that
+	the item can be expanded as a snippet.
+
+	Scope: `application`, default: `"~"`
+
+"suggest.snippetsSupport"				*coc-config-suggest-snippetsSupport*
+
+	Set to false to disable snippet support in completion.
+
+	Scope: `language-overridable`, default: `true`
+
+"suggest.timeout"					*coc-config-suggest-timeout*
+
+	Timeout for completion, in milliseconds.
+
+	Scope: `language-overridable`, default: `5000`
+
+"suggest.triggerAfterInsertEnter"			*coc-config-suggest-triggerAfterInsertEnter*
+
+	Trigger completion after InsertEnter; auto trigger should be 'always' to
+	enable this option.
+
+	Scope: `language-overridable`, default: `false`
+
+"suggest.triggerCompletionWait"				*coc-config-suggest-triggerCompletionWait*
+
+	Wait time between text change and completion start; the completion is
+	canceled when text changes during the wait.
+
+	Scope: `language-overridable`, default: `0`
+
+"suggest.virtualText"					*coc-config-suggest-virtualText*
+
+	Show virtual text after the cursor for the inserted word of the
+	currently selected completion item.
+
+	Scope: `application`, default: `false`
+
+------------------------------------------------------------------------------
+INLINE COMPLETION
+							*coc-config-inlineSuggest*
+
+"inlineSuggest.autoTrigger"				*coc-config-inlineSuggest-autoTrigger*
+
+	Automatically trigger inline completion after completion is done or
+	on cursor hold.
+
+	Scope: `language-overridable`, default: `true`
+
+"inlineSuggest.triggerCompletionWait"   		*coc-config-inlineSuggest-triggerCompletionWait*
+
+	Wait time in milliseconds between text change and triggering inline
+	completion.
+
+	Scope: `language-overridable`, default: `10`
+
+------------------------------------------------------------------------------
+NEXT EDIT
+							*coc-config-nextEdit*
+
+"nextEdit.autoTrigger"					*coc-config-nextEdit-autoTrigger*
+
+	Automatically request generic next edits after text changes.
+
+	Scope: `language-overridable`, default: `true`
+
+"nextEdit.triggerWait"					*coc-config-nextEdit-triggerWait*
+
+	Wait time in milliseconds before requesting a next edit.
+
+	Scope: `language-overridable`, default: `150`
+
+------------------------------------------------------------------------------
+TYPEHIERARCHY
+							*coc-config-typeHierarchy*
+
+"typeHierarchy.enableTooltip"				*coc-config-typeHierarchy-enableTooltip*
+
+	Enable a tooltip showing the relative filepath of a type hierarchy
+	item.
+
+	Scope: `application`, default: `true`
+
+"typeHierarchy.openCommand"				*coc-config-typeHierarchy-openCommand*
+
+	Open command for type hierarchy tree view.
+
+	Scope: `application`, default: `"edit"`
+
+"typeHierarchy.splitCommand"				*coc-config-typeHierarchy-splitCommand*
+
+	Window split command used by type hierarchy tree view.
+
+	Scope: `application`, default: `"botright 30vs"`
+
+==============================================================================
+vim:tw=78:nosta:noet:ts=8:sts=0:ft=help:noet:fen:

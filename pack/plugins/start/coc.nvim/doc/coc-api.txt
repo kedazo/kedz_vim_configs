@@ -1,0 +1,571 @@
+*coc-api.txt*                                  NodeJS client for Vim & Neovim.
+
+CONTENTS
+
+Vim sources 					|coc-api-vim-source|
+Extension introduction 				|coc-api-intro|
+Extension package json 				|coc-api-json|
+Single file extensions 				|coc-api-single|
+Create custom Extensions 			|coc-api-extension|
+Dynamic insert keymaps 				|coc-api-insert-keymap|
+Lua API 					|coc-api-lua|
+MCP API 					|coc-api-mcp|
+Debug extensions 				|coc-api-debug|
+
+==============================================================================
+
+This guide explains how to extend coc.nvim by creating Vim completion
+sources and coc.nvim extensions.
+
+------------------------------------------------------------------------------
+FILE SYSTEM WATCHERS                              *coc-api-file-system-watcher*
+
+`workspace.createFileSystemWatcher(globPattern, options)` accepts a
+`FileSystemWatcherOptions` object. Set `includeDirectories: true` to receive
+native directory events through the same handlers and glob matching as files.
+Watchman remains file-only. The options `ignoreCreateEvents`,
+`ignoreChangeEvents` and `ignoreDeleteEvents` default to false, as does
+`includeDirectories`. The existing boolean arguments remain supported.
+
+------------------------------------------------------------------------------
+VIM SOURCES 					*coc-api-vim-source*
+
+During initialization, coc.nvim searches Vim's |runtimepath| for files
+matching the pattern `autoload/coc/source/${name}.vim`; matching files are
+loaded as Vim completion sources.
+
+Note: LSP completion features such as `TextEdit`, `additionalTextEdits`, and
+`command` are not supported by Vim sources; use the NodeJS API
+`languages.registerCompletionItemProvider` for LSP completion.
+
+For example, create a file `autoload/coc/source/email.vim` inside your plugin
+folder.  With code:
+>
+  " vim source for emails
+  function! coc#source#email#init() abort
+    return {
+      \ 'priority': 9,
+      \ 'shortcut': 'Email',
+      \ 'triggerCharacters': ['@']
+      \}
+  endfunction
+
+  function! coc#source#email#complete(option, cb) abort
+    let items = ['foo@gmail.com', 'bar@yahoo.com']
+    call a:cb(items)
+  endfunction
+<
+The `init` and `complete` functions are required for Vim sources; an error
+message is shown when either is missing.
+
+vim9script can also be used on vim9 (not supported on Neovim), but the first
+letter of each function name must be uppercased, for example:
+>
+  vim9script
+  export def Init(): dict<any>
+    return {
+      priority: 9,
+      shortcut: 'Email',
+      triggerCharacters: ['@']
+    }
+  enddef
+
+  export def Complete(option: dict<any>, Callback: func(list<any>))
+    const items = ['foo@gmail.com', 'bar@yahoo.com']
+    Callback(items)
+  enddef
+<
+Source option: ~
+
+  The source option object is returned by the `coc#source#{name}#init`
+  function. Available properties:
+
+  • shortcut: The shortcut characters shown in the popup menu; the first
+    three characters of the source name are used when not set.
+  • priority: The priority of the source, defaults to `9`.
+  • filetypes: An array of filetype names for which this source should be
+    triggered. The source is available for all filetypes when not set.
+  • firstMatch: When truthy, only completion items whose first letter
+    matches the user input are shown.
+  • triggerCharacters: Trigger characters for this source, defaults to `[]`.
+  • triggerOnly: The source is only triggered by trigger characters. When
+    trigger characters are false or empty, the source is only triggered by
+    the |coc#start()| API.
+  • isSnippet: All items returned by `complete` are snippets, and snippet
+    indicator text is added to their labels in the popup menu. The
+    `isSnippet` property of a completion item overrides this option.
+
+  All options are optional.
+
+Source configurations: ~
+
+  Vim sources register |coc-configuration| to allow the user to customize
+  source behavior.
+
+  • `coc.source.${name}.enable` Enable the source, defaults to
+    `true`.
+  • `coc.source.${name}.disableSyntaxes` Syntax names for which completion
+    is disabled when triggered.
+  • `coc.source.${name}.firstMatch` Defaults to the `firstMatch` source
+    option.
+  • `coc.source.${name}.priority` Defaults to the `priority` source option.
+  • `coc.source.${name}.shortcut` Defaults to the `shortcut` source
+    option.
+  • `coc.source.${name}.filetypes` Defaults to the `filetypes` source
+    option.
+
+Complete function: ~
+
+  The complete function is called with the complete option as the first
+  argument and a callback function as the second. The callback should be
+  called with a list of completion items or `v:null`, either synchronously or
+  asynchronously.
+
+  Note: Computing completion items synchronously blocks Vim.
+  Note: Errors during completion are not thrown; use |:CocOpenLog| to check
+  the error log.
+
+  The complete option has the following properties:
+
+  • bufnr: The current buffer number.
+  • line: The line content at the time completion was triggered.
+  • col: The start column of the completion, defaulting to the start column
+    of the keyword before the cursor (0-based).
+  • input: The input text between the start and cursor columns.
+  • filetype: The filetype of the current buffer.
+  • filepath: The full path of the current buffer.
+  • changedtick: The b:changedtick value when completion was triggered.
+  • triggerCharacter: The character that triggered the completion, may be an
+    empty string.
+  • colnr: The cursor column when completion was triggered (1-based).
+  • linenr: The line number of the cursor (1-based).
+
+  Completion items extend Vim's |complete-items| with the following
+  properties:
+
+  • deprecated: When truthy, the item is rendered with strikethrough
+    highlight.
+  • labelDetails: Additional details for a completion item label, with
+    optional `detail` and/or `description` text.
+  • sortText: A string used to compare this item with other items; the word
+    is used when not set.
+  • filterText: A string used to filter a set of completion items; the word
+    is used when not set.
+  • insertText: The text to insert, which may be TextMate snippet text; the
+    word is used when not set.
+  • isSnippet: When truthy, the text to insert is a snippet. If truthy and
+    the Vim source does not provide `on_complete`, `insertText` is expanded
+    as a TextMate snippet when the completion is confirmed.
+  • documentation: An array of `Documentation` objects providing `filetype`
+    and `content` text displayed in the preview window.
+
+  Only the `word` property is mandatory for completion items.
+
+Optional functions: ~
+
+  A Vim source may provide optional functions that coc.nvim invokes:
+
+  • `coc#source#{name}#get_startcol(option)` Alters the start column of the
+    completion; the returned column must be <= the current cursor column.
+  • `coc#source#{name}#on_complete(item)` Called with the selected item when
+    the user confirms the completion with |coc#pum#confirm()| or
+    |coc#pum#select_confirm()|. Normally used to apply necessary edits to the
+    buffer.
+  • `coc#source#{name}#on_enter(option)` Called on |BufEnter| with an option
+    containing:
+    • bufnr: The buffer number.
+    • uri: The URI text of the buffer.
+    • languageId: The mapped filetype of the buffer; see
+      |coc-document-filetype|.
+  • `coc#source#{name}#refresh()` Called when the user triggers the refresh
+    action for the source.
+
+------------------------------------------------------------------------------
+EXTENSION INTRODUCTION 				*coc-api-intro*
+
+Every coc.nvim extension has a JavaScript entry file that is loaded by the
+NodeJS API `vm.runInContext` with a shared global context (like an iframe in a
+browser).
+
+The JavaScript entry file should be a CommonJS module that exports an
+`activate` method. `require('coc.nvim')` can be used to access the modules
+exported by coc.nvim, for example:
+>
+  const {window} = require('coc.nvim')
+  exports.activate = async context => {
+    window.showInformationMessage('extension activated')
+  }
+<
+When `exports.deactivate` is exported as a function, it is called when the
+extension is deactivated.
+
+Limitation of extension context: ~
+
+Some NodeJS methods and properties can't be used inside the extension
+context, including:
+
+  • `process.reallyExit()`
+  • `process.abort()`
+  • `process.setuid()`
+  • `process.setgid()`
+  • `process.setgroups()`
+  • `process._fatalException()`
+  • `process.exit()`
+  • `process.kill()`
+  • `process.umask()` Can only be used to get the umask value.
+  • `process.chdir()` Can be called, but has no effect.
+
+Some globals can't be accessed directly, for example `TextDecoder` and
+`TextEncoder`; use `globalThis`, such as `globalThis.TextDecoder`, to access
+them.
+
+						*coc-api-console*
+
+Stdin and stdout of the NodeJS process are used for communication between Vim
+and the NodeJS process; using methods related to `process.stdin` and
+`process.stdout` may cause unexpected behavior. However, some `console`
+methods are provided for debugging.
+
+Messages from `console` in an extension are redirected to the log file
+|:CocOpenLog|. Available methods:
+
+  • `debug(...args: any[])` Write debug message to the log file.
+  • `log(...args: any[])` Write info message to the log file.
+  • `info(...args: any[])` Write info message to the log file.
+  • `error(...args: any[])` Write error message to the log file.
+  • `warn(...args: any[])` Write warning message to the log file.
+
+Check the full NodeJS API interfaces at:
+https://github.com/neoclide/coc.nvim/blob/master/typings/index.d.ts
+
+------------------------------------------------------------------------------
+EXTENSION PACKAGE JSON 				*coc-api-json*
+
+The package.json file in the extension root defines the metadata of the
+extension. For example:
+>
+  {
+    "name": "coc-my-extension",
+    "version": "1.0.0",
+    "main": "lib/index.js",
+    "engines": {
+      "coc": "^0.0.82"
+    },
+    "activationEvents": [
+      "*",
+    ],
+    "contributes": {
+      "rootPatterns": [{
+        "filetype": "myfiletype",
+        "patterns": [
+          "project_root.json"
+        ]
+      }],
+      "commands": [{
+        "title": "My command",
+        "category": "myextension",
+        "id": "myextension.myCommand"
+      }],
+      "configuration": {
+        "type": "object",
+        "properties": {
+          "myextension.enable": {
+            "type": "boolean",
+            "default": true,
+            "scope": "resource",
+            "description": "Enable running of my extension."
+          }
+        }
+      }
+    }
+  }
+<
+Required properties of package.json:
+
+  • name: The unique name of the extension. To publish the extension, the
+    name must not already be taken by existing packages at
+    https://www.npmjs.com/
+  • version: The semver version of the extension.
+  • engines: Should have a `coc` property with the minimum required coc.nvim
+    version.
+
+The `main` property contains the relative filepath of the JavaScript entry
+file; `index.js` is used when it is not set.
+
+The `activationEvents` property tells coc.nvim when to activate the extension.
+When the property is missing or includes `*`, the extension is activated
+during coc.nvim initialization. Other possible events:
+
+  • onLanguage: Activate the extension when a document with a specific
+    languageId exists, e.g. `"onLanguage:vim"` activates the
+    extension when a buffer with the `vim` languageId is loaded.
+  • onFileSystem: Activate the extension when a document with a custom
+    schema is loaded, e.g. `"onFileSystem:fugitive"` activates the
+    extension when a buffer with the `fugitive` schema is loaded.
+  • onCommand: Activate the extension when a specific command is invoked by
+    the user, e.g. `"onCommand:tsserver.reloadProjects"`.
+  • workspaceContains: Activate the extension when the glob pattern matches
+    a file in the current workspace folder, e.g.
+    `"workspaceContains:**/package.json"`.
+
+The optional `contributes` property contains metadata contributed to
+coc.nvim, including:
+
+  • rootPatterns: The patterns to resolve |coc-workspace-folders| for
+    associated filetype.
+  • commands: List of commands with `id` and `title` that can be invoked by
+    |:CocCommand|.
+  • configuration: Contains a `properties` object or a list of
+    configurations, each providing `properties` objects that define the
+    configuration properties contributed by this extension.
+
+The `contributes` property can also contain other properties used by other
+extensions, for example the `jsonValidation` property used by coc-json.
+
+It's recommended to install `coc-json` for JSON intellisense support.
+
+------------------------------------------------------------------------------
+SINGLE FILE EXTENSIONS 				*coc-api-single*
+
+The easiest way to access the NodeJS API is to make use of single-file
+extensions.
+
+All JavaScript files ending with `.js` in the `coc-extensions` folder under
+|g:coc_config_home| are considered coc extensions.
+
+The JavaScript files are loaded during coc.nvim initialization by default.
+
+To contribute extension metadata, create a `${name}.json` file alongside
+`${name}.js`. The JSON file works the same as the extension package.json
+|coc-api-json|, except that only the `activationEvents` and `contributes`
+properties are used.
+
+Single-file extensions can't be managed by the extensions list.
+
+------------------------------------------------------------------------------
+CREATE CUSTOM EXTENSIONS 			*coc-api-extension*
+
+To make an extension installable by |:CocInstall|, the easiest way is to use
+https://github.com/fannheyward/create-coc-extension. Simply run:
+>
+	npm init coc-extension [extension-name]
+<
+or
+>
+	yarn create coc-extension [extension-name]
+<
+in your terminal, and you will be prompted to create a JavaScript/TypeScript
+extension step by step.
+
+To create an extension manually, follow these steps:
+
+  • Create an empty folder and go to it.
+  • Create the package.json file |coc-api-json|.
+  • Create a JavaScript file named `index.js` and write the code.
+  • Add the created folder to Vim's runtimepath by adding
+    `set runtimepath^=/path/to/folder` to your vimrc.
+
+Recommended steps:
+
+  • Install the NodeJS and coc.nvim type definitions by running
+    `npm install @types/node@latest coc.nvim` in the extension folder.
+  • Bundle the JavaScript files with esbuild when using multiple Node
+    dependencies, to reduce installation time. A typical build script looks
+    like: >
+
+      async function start() {
+        await require('esbuild').build({
+          entryPoints: ['src/index.ts'],
+          bundle: true,
+          minify: process.env.NODE_ENV === 'production',
+          sourcemap: process.env.NODE_ENV === 'development',
+          mainFields: ['module', 'main'],
+          external: ['coc.nvim'],
+          platform: 'node',
+          target: 'node20',
+          outfile: 'lib/index.js'
+        })
+      }
+
+      start().catch(e => {
+        console.error(e)
+      })
+<
+------------------------------------------------------------------------------
+DYNAMIC INSERT KEYMAPS 				*coc-api-insert-keymap*
+
+Use `workspace.registerInsertKeymap()` when an insert-mode mapping must inspect
+the current editor state and return keys without calling `feedkeys()` from the
+callback: >
+
+  const disposable = workspace.registerInsertKeymap('(', state => {
+    const [line, position] = state
+    if (line[position[1]] === ')') return [{ key: '<Right>' }]
+    return [{ text: '()' }, { key: '<Left>' }]
+  }, {
+    arglist: ['[getline("."), coc#util#cursor()]']
+  })
+<
+The callback receives each Vim expression in `arglist` as one argument.  The
+expressions are evaluated when the mapping is invoked, so they can provide the
+current line, cursor, buffer number, options, or buffer variables without a
+nested editor request.  Use the `buffer` option with a buffer number, `true`,
+or `0` to create a buffer-local mapping.
+
+Each returned item is either `{ text: string }` for literal text or
+`{ key: string }` for one special key in |key-notation|, such as `<Left>` or
+`<C-G>`.  Text that looks like key notation remains literal.  Items execute in
+array order.
+
+The callback is evaluated synchronously by the insert expression mapping.  It
+may update extension-owned JavaScript state, but should not call editor APIs,
+change text, switch windows, or run `:normal`; pass required editor state with
+`arglist` instead.  In particular, Vim's synchronous channel waits may process
+other channel messages, so nested editor requests are unsafe in this callback.
+
+On Neovim, returning the result directly keeps `:normal` and macro typeahead
+ordered without a nested `feedkeys()` call.  Vim supports the same API for
+ordinary insert mappings, but its channel-backed expression mappings cannot
+guarantee result ordering for batched `:normal` or macro input; keep such Vim
+logic local to Vimscript when that guarantee is required.
+
+The returned Disposable removes the mapping.
+
+------------------------------------------------------------------------------
+LUA API 						*coc-api-lua*
+
+The Lua module `lua/coc/init.lua` exposes a small API for accessing the
+coc.nvim NodeJS process from Lua. Load it with `require('coc')` and call the
+following functions:
+
+  • `get_diagnostics()` Get the diagnostics of all loaded documents.
+  • `get_config(section)` Get the configuration object of a section.
+  • `execute_command(name, ...)` Execute a registered command with optional
+    arguments.
+  • `workspace_symbols(query)` Search workspace symbols by query text.
+  • `document_symbols([bufnr])` Get the symbols of a buffer; the current
+    buffer is used when `bufnr` is not provided.
+  • `command_list()` Get the list of registered command ids.
+  • `extension_stats()` Get the list of loaded extensions and their states.
+
+Blocking behavior: ~
+
+All of the functions above are synchronous. They use `vim.rpcrequest`, which
+blocks the Neovim UI until the NodeJS process replies. Operations such as
+`execute_command()`, `workspace_symbols()`, and `document_symbols()` can
+involve language server round trips or slow user commands, and there is no
+timeout or cancellation, so the editor may freeze for the duration of the
+request. Prefer calling these functions from a separate coroutine, or avoid
+them in performance-sensitive paths.
+
+-------------------------------------------------------------------------------
+MCP API 					*coc-api-mcp*
+
+coc.nvim exposes an MCP (Model Context Protocol) server integration through
+the `mcp` export. Extensions can register custom tools that become available
+to connected MCP clients (e.g. Codex) through `mcp.registerTool()`.
+
+	mcp.registerTool(tool) ~
+
+Register a custom MCP tool. `tool` has the following shape:
+
+	{
+	  name: string
+	  title?: string
+	  description: string
+	  inputSchema: Record<string, any>
+	  outputSchema?: Record<string, any>
+	  annotations?: {
+	    readOnlyHint?: boolean
+	    destructiveHint?: boolean
+	    idempotentHint?: boolean
+	    openWorldHint?: boolean
+	  }
+	  handler(args, context): ToolResult | Promise<ToolResult>
+	}
+
+`handler` receives the tool arguments and a context with a cancellation
+token; return `{ content: [{ type: 'text', text }], structuredContent?, isError? }`.
+Mark mutating tools with `annotations.destructiveHint: true` so clients prompt
+for confirmation. The returned Disposable unregisters the tool. Tools survive
+server restarts until disposed. A tool is only exposed to MCP clients when
+its name is listed in the `mcp.allowedTools` whitelist (|coc-config-mcp-allowedTools|).
+
+	mcp.running ~
+	mcp.status() ~
+	mcp.start() ~
+	mcp.stop() ~
+
+Inspect and control the built-in MCP server; see |coc-mcp| for user-facing
+configuration and `doc/coc-mcp.txt` for the protocol guide.
+
+------------------------------------------------------------------------------
+
+DEBUG EXTENSIONS 				*coc-api-debug*
+
+						*coc-api-channel*
+Channel errors: ~
+
+The channel feature on vim9 is used by coc.nvim to communicate between Vim
+and NodeJS; error messages caused by channel commands are not displayed on
+the screen. In most cases the error is caught by coc.nvim and can be checked
+with |:CocOpenLog|. But for some API functions, including `callVim()`,
+`exVim()`, and `evalVim()`, errors only update |v:errmsg| and appear in Vim's
+channel log, which can be checked with |g:node_client_debug| or by setting
+the environment variable `$COC_VIM_CHANNEL_ENABLE` to `"1"`.
+
+Uncaught errors: ~
+
+When an uncaught error is raised in the NodeJS process, the error message is
+sent to Vim through stderr and echoed by Vim (unless
+|g:coc_disable_uncaught_error| is enabled).
+
+Error messages are not stored in Vim's message history; use
+|:CocPrintErrors| to show previous errors.
+
+When an error happens on the Vim side, the promise is rejected when a request
+is sent to Vim. For notifications, Vim sends `nvim_error_event` to the NodeJS
+process, and the node-client creates an error log for it (which can be opened
+with |:CocOpenLog|).
+
+Use the log file: ~
+
+• Configure `NVIM_COC_LOG_LEVEL` to `trace` in vimrc:
+  `let $NVIM_COC_LOG_LEVEL='trace'`
+• Configure `NVIM_COC_LOG_FILE` to a fixed path in vimrc:
+  `let $NVIM_COC_LOG_FILE=/tmp/coc.log`; otherwise the log file is different
+  for each Vim instance.
+• Use |coc-api-console| to add console statements to JavaScript/TypeScript
+  code, and compile the extension when needed.
+• Tail the log file with the `tail` command and reproduce the issue.
+
+Add source map support: ~
+
+When the JavaScript code is bundled with esbuild, correct source map support
+for the error stack is useful.
+
+• Install source-map-support globally with
+  `npm install -g source-map-support`
+• Find the npm root with `npm root -g`
+• Load source-map-support with coc.nvim by appending arguments to node in
+  vimrc:
+  `let g:coc_node_args = ['-r', '/path/to/npm/root/source-map-support/register']`
+  Replace `/path/to/npm/root` with the result of the `npm root -g` command.
+
+Note: the source-map-support module slows down the coc.nvim initialization.
+
+Debug JavaScript code with Chrome: ~
+
+• Add `let g:coc_node_args = ['--nolazy', '--inspect-brk=5858']`
+• Open Vim and you will get an error message indicating that the debugger is
+  listening.
+• Open Chrome with the URL chrome://inspect/#devices, configure the `Target
+  discovery settings`, and you will get the remote target to inspect.
+• Click the inspect link to open the DevTools.
+• Click the Sources label to debug JavaScript code.
+
+Other debugger clients can be used as well; see
+https://nodejs.org/en/docs/guides/debugging-getting-started/
+
+==============================================================================
+vim:tw=78:sta:noet:ts=8:sts=0:ft=help:fen:
