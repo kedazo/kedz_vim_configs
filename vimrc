@@ -34,6 +34,11 @@ endfunction
 " to forcibly enable 256 term colors
 " set t_Co=256
 
+" don't query the terminal's cursor style/blink: gnome-terminal's late replies
+" (^[P1$r0 q^[\ and ^[[?12;4$y) leaked onto the screen while startup was busy
+" with coc/airline (vim 9.1.0016).  Only cost: vim can't restore the cursor shape.
+set t_RS= t_RC=
+
 " airline plugin
 set laststatus=2
 
@@ -123,11 +128,16 @@ hi CocPumDetail  ctermfg=110 guifg=#88b4f2
 hi CocFloatSbar  ctermbg=236 guibg=#303040
 hi CocFloatThumb ctermbg=240 guibg=#585858
 
-" completion popup: Tab/S-Tab navigate, CR accepts, C-Space re-triggers manually
+" completion popup: opens by itself only on . -> :: (coc-settings.json
+" "suggest.autoTrigger": "trigger"), otherwise on demand:
+"  C-Space (the terminal sends it as NUL = <C-@>) or the old omni C-x C-o.
+" Tab/S-Tab navigate, CR accepts.
 inoremap <silent><expr> <TAB>    coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
 inoremap <silent><expr> <S-TAB>  coc#pum#visible() ? coc#pum#prev(1) : "\<S-TAB>"
 inoremap <silent><expr> <CR>     coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
-inoremap <silent><expr> <C-Space> coc#start()
+inoremap <silent><expr> <C-Space> coc#refresh()
+inoremap <silent><expr> <C-@>     coc#refresh()
+inoremap <silent><expr> <C-x><C-o> coc#refresh()
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)

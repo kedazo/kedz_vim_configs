@@ -1,5 +1,5 @@
 {
-  "suggest.autoTrigger": "always",
+  "suggest.autoTrigger": "trigger",
   "suggest.floatConfig": { "border": true },
 
   "inlayHint.enable": false,
